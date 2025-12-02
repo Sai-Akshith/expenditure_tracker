@@ -44,6 +44,23 @@ h1 {
   border: 1px solid #1f2937;
 }
 
+
+/* animation bits */
+  transition:
+    transform 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    border-color 0.18s ease-out,
+    background 0.18s ease-out;
+}
+
+/* hover effect */
+.summary-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.9);
+  border-color: #38bdf8;
+  background: #02081f;
+}
+
 .summary-label {
   font-size: 0.8rem;
   color: #9ca3af;
@@ -69,3 +86,4 @@ h1 {
 p {
   margin-bottom: 8px;
 }
+
