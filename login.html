@@ -5,8 +5,8 @@
   <title>Login - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
-  <link rel="stylesheet" href="css/style.css?v=19" />
-  <link rel="stylesheet" href="css/login.css?v=19" />
+  <link rel="stylesheet" href="css/style.css?v=22" />
+  <link rel="stylesheet" href="css/login.css?v=22" />
 </head>
 <body>
 
@@ -16,34 +16,94 @@
     <div class="blob blob-3"></div>
   </div>
 
-  <div id="game-area">
-    </div>
+  <div id="game-area"></div>
+
+  <div class="controls">
+    <label class="toggle-switch">
+      <input type="checkbox" id="gravity-toggle">
+      <span class="slider">
+        <span class="icon-floating">🪐</span>
+        <span class="icon-gravity">🍎</span>
+      </span>
+    </label>
+    <span class="control-label">Physics Mode</span>
+  </div>
 
   <div class="login-container">
     <div class="login-card" id="tilt-card">
-      <div class="brand-icon">
-        <svg width="28" height="28" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
-          <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
-        </svg>
-      </div>
       
-      <h1>Welcome Back</h1>
-      <p class="subtitle">Track your spending with confidence.<br><span style="font-size:0.8rem; opacity:0.8;">(Try throwing the coins!)</span></p>
+      <div class="brand-header">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M4.5 3.75a3 3 0 00-3 3v.75h21v-.75a3 3 0 00-3-3h-15z" />
+            <path fill-rule="evenodd" d="M22.5 9.75h-21v7.5a3 3 0 003 3h15a3 3 0 003-3v-7.5zm-18 3.75a.75.75 0 01.75-.75h6a.75.75 0 010 1.5h-6a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h3a.75.75 0 000-1.5h-3z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <h2>Welcome back</h2>
+        <p class="subtitle">Enter your details to access your account.</p>
+      </div>
 
-      <button id="google-login-btn" class="google-btn">
-        <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-          <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
-          <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
-          <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
-          <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
-        </svg>
-        <span>Sign in with Google</span>
-      </button>
+      <form id="login-form" onsubmit="event.preventDefault();">
+        
+        <div class="input-group">
+          <input type="email" id="email" required placeholder=" " autocomplete="email">
+          <label for="email">Email Address</label>
+          <div class="validation-icon">
+            <svg class="check" viewBox="0 0 24 24"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <input type="password" id="password" required placeholder=" " autocomplete="current-password">
+          <label for="password">Password</label>
+          <button type="button" class="toggle-password" id="toggle-pw">
+            <svg class="eye-open" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <svg class="eye-closed hidden" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="form-actions">
+          <label class="checkbox-container">
+            <input type="checkbox" checked>
+            <span class="checkmark"></span>
+            Remember me
+          </label>
+          <a href="#" class="forgot-password">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-primary magnetic-btn" id="email-login-btn">
+          <span>Sign In</span>
+          <div class="spinner"></div>
+        </button>
+      </form>
 
       <div class="divider">
-        <span>Secure Login</span>
+        <span>Or continue with</span>
       </div>
+
+      <div class="social-grid">
+        <button id="google-login-btn" class="social-btn">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3L37.7 9.4C34.1 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.2-2.7-.4-3.9z"/>
+            <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+            <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.3-4.5 2.1-7.2 2.1-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+            <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2c3.7-3.4 5.8-8.4 5.8-14.8 0-1.3-.2-2.7-.4-3.9z"/>
+          </svg>
+          <span>Google</span>
+        </button>
+        <button class="social-btn">
+          <svg width="20" height="20" viewBox="0 0 384 512" fill="currentColor">
+            <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z"/>
+          </svg>
+          <span>Apple</span>
+        </button>
+      </div>
+
     </div>
   </div>
 
@@ -54,73 +114,67 @@
   <script src="js/auth.js"></script>
 
   <script>
-    /* =========================================
-       1. 3D HOLOGRAPHIC TILT & SPOTLIGHT
-       ========================================= */
-    const card = document.getElementById('tilt-card');
-    
-    document.addEventListener('mousemove', (e) => {
-      if (!card) return;
-      
-      const { innerWidth, innerHeight } = window;
-      const x = e.clientX;
-      const y = e.clientY;
-      
-      // Calculate rotation (Sensitivity 25)
-      // center of screen is 0,0
-      const rotateY = (innerWidth / 2 - x) / 25; 
-      const rotateX = (innerHeight / 2 - y) / -25;
+    /* -----------------------------------------------
+       1. PROFESSIONAL FORM LOGIC
+    ----------------------------------------------- */
+    // Password Toggle
+    const toggleBtn = document.getElementById('toggle-pw');
+    const pwInput = document.getElementById('password');
+    const eyeOpen = document.querySelector('.eye-open');
+    const eyeClosed = document.querySelector('.eye-closed');
 
-      // Apply 3D Rotation
-      card.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
-
-      // Update Spotlight Position (CSS Variables)
-      const rect = card.getBoundingClientRect();
-      const mouseX = x - rect.left;
-      const mouseY = y - rect.top;
-      
-      card.style.setProperty('--mouse-x', `${mouseX}px`);
-      card.style.setProperty('--mouse-y', `${mouseY}px`);
+    toggleBtn.addEventListener('click', () => {
+      const type = pwInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      pwInput.setAttribute('type', type);
+      eyeOpen.classList.toggle('hidden');
+      eyeClosed.classList.toggle('hidden');
     });
 
+    // Loading State
+    const emailBtn = document.getElementById('email-login-btn');
+    emailBtn.addEventListener('click', () => {
+      if(document.getElementById('email').value && document.getElementById('password').value) {
+        emailBtn.classList.add('loading');
+        setTimeout(() => {
+          emailBtn.classList.remove('loading');
+          alert("This is a demo form. Please use Google Login.");
+        }, 1500);
+      }
+    });
 
-    /* =========================================
-       2. ZERO-GRAVITY COIN PHYSICS
-       ========================================= */
+    /* -----------------------------------------------
+       2. ROCKSTAR PHYSICS ENGINE (Coins + Gravity)
+    ----------------------------------------------- */
     const gameArea = document.getElementById('game-area');
-    const COIN_COUNT = 8;
+    const gravityToggle = document.getElementById('gravity-toggle');
     const coins = [];
+    const COIN_COUNT = 8;
+    let useGravity = false;
+
+    if(gravityToggle) {
+      gravityToggle.addEventListener('change', (e) => {
+        useGravity = e.target.checked;
+      });
+    }
 
     // Create Coins
-    for (let i = 0; i < COIN_COUNT; i++) {
-      createCoin();
-    }
+    for (let i = 0; i < COIN_COUNT; i++) createCoin();
 
     function createCoin() {
       const coin = document.createElement('img');
       coin.src = "https://em-content.zobj.net/source/microsoft-teams/337/coin_1fa99.png";
       coin.classList.add('coin');
       coin.draggable = false; 
-      
-      // Initial Position
       const x = Math.random() * (window.innerWidth - 80);
       const y = Math.random() * (window.innerHeight - 80);
-      
       coin.style.left = x + 'px';
       coin.style.top = y + 'px';
-      coin.style.transform = `rotate(${Math.random() * 360}deg)`;
-
-      // Physics State for this coin
+      
       const physics = {
-        el: coin,
-        x: x,
-        y: y,
-        vx: (Math.random() - 0.5) * 2, // Random drift velocity
-        vy: (Math.random() - 0.5) * 2,
-        isDragging: false,
-        lastX: 0,
-        lastY: 0,
-        lastTime: 0
+        el: coin, x: x, y: y,
+        vx: (Math.random() - 0.5) * 3, vy: (Math.random() - 0.5) * 3,
+        rotation: Math.random() * 360, vRot: (Math.random() - 0.5) * 5,
+        isDragging: false, lastX: 0, lastY: 0, lastTime: 0
       };
       
       coins.push(physics);
@@ -128,90 +182,96 @@
       gameArea.appendChild(coin);
     }
 
-    // Animation Loop (Runs 60fps)
+    // Physics Loop
     function animate() {
-      const friction = 0.98; // Air resistance
-      const bounce = 0.7;    // Bounciness (0 = no bounce, 1 = perfect elastic)
+      const friction = 0.99; 
+      const gravity = 0.5;   
+      const bounce = 0.7;
       const maxX = window.innerWidth - 64;
       const maxY = window.innerHeight - 64;
 
       coins.forEach(p => {
         if (!p.isDragging) {
-          // Apply velocity
-          p.x += p.vx;
-          p.y += p.vy;
+          if (useGravity) p.vy += gravity;
+          p.x += p.vx; p.y += p.vy; p.rotation += p.vRot;
+          p.vx *= friction; p.vy *= friction;
 
-          // Apply Friction
-          p.vx *= friction;
-          p.vy *= friction;
-
-          // Screen Collisions (Bounce)
           if (p.x < 0) { p.x = 0; p.vx *= -bounce; }
           if (p.x > maxX) { p.x = maxX; p.vx *= -bounce; }
           if (p.y < 0) { p.y = 0; p.vy *= -bounce; }
-          if (p.y > maxY) { p.y = maxY; p.vy *= -bounce; }
+          if (p.y > maxY) { p.y = maxY; p.vy *= -bounce; if (useGravity) p.vx *= 0.95; }
 
-          // Apply Position
+          p.el.style.transform = `rotate(${p.rotation}deg)`;
           p.el.style.left = p.x + 'px';
           p.el.style.top = p.y + 'px';
         }
       });
-
       requestAnimationFrame(animate);
     }
-    animate(); // Start the physics engine
+    animate();
 
-    // Drag Logic
+    // Shockwave
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.controls') || e.target.closest('.login-card')) return;
+      const clickX = e.clientX;
+      const clickY = e.clientY;
+      coins.forEach(p => {
+        const dx = p.x - clickX;
+        const dy = p.y - clickY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 300) {
+          const force = (300 - dist) * 0.15; 
+          const angle = Math.atan2(dy, dx);
+          p.vx += Math.cos(angle) * force;
+          p.vy += Math.sin(angle) * force;
+          p.vRot += (Math.random() - 0.5) * 40;
+        }
+      });
+    });
+
     function makeInteractable(p) {
       const el = p.el;
       let startX, startY;
-
-      // Mouse Down
       el.addEventListener('mousedown', (e) => {
         p.isDragging = true;
-        startX = e.clientX - p.x;
-        startY = e.clientY - p.y;
-        el.style.zIndex = 1000;
-        el.style.cursor = 'grabbing';
-        p.vx = 0; p.vy = 0; // Stop movement while holding
-        p.lastX = e.clientX;
-        p.lastY = e.clientY;
-        p.lastTime = Date.now();
+        startX = e.clientX - p.x; startY = e.clientY - p.y;
+        el.style.zIndex = 1000; el.style.cursor = 'grabbing';
+        p.vx = 0; p.vy = 0; 
+        p.lastX = e.clientX; p.lastY = e.clientY; p.lastTime = Date.now();
       });
-
-      // Mouse Move
       window.addEventListener('mousemove', (e) => {
         if (!p.isDragging) return;
         e.preventDefault();
-        
-        // Move coin
-        p.x = e.clientX - startX;
-        p.y = e.clientY - startY;
-        el.style.left = p.x + 'px';
-        el.style.top = p.y + 'px';
-
-        // Calculate throwing velocity
-        const now = Date.now();
-        const dt = now - p.lastTime;
+        p.x = e.clientX - startX; p.y = e.clientY - startY;
+        el.style.left = p.x + 'px'; el.style.top = p.y + 'px';
+        const now = Date.now(); const dt = now - p.lastTime;
         if (dt > 0) {
-          p.vx = (e.clientX - p.lastX) / dt * 15; // Speed multiplier
-          p.vy = (e.clientY - p.lastY) / dt * 15;
-          p.lastX = e.clientX;
-          p.lastY = e.clientY;
-          p.lastTime = now;
+          p.vx = (e.clientX - p.lastX) / dt * 10;
+          p.vy = (e.clientY - p.lastY) / dt * 10;
+          p.lastX = e.clientX; p.lastY = e.clientY; p.lastTime = now;
         }
       });
-
-      // Mouse Up
       window.addEventListener('mouseup', () => {
         if (!p.isDragging) return;
-        p.isDragging = false;
-        el.style.zIndex = 20;
-        el.style.cursor = 'grab';
+        p.isDragging = false; el.style.zIndex = 20; el.style.cursor = 'grab';
       });
-      
-      // (Repeat for Touch events if needed, omitted for brevity but logic is same)
     }
+
+    /* -----------------------------------------------
+       3. HOLOGRAPHIC TILT
+    ----------------------------------------------- */
+    const card = document.getElementById('tilt-card');
+    document.addEventListener('mousemove', (e) => {
+      if (!card) return;
+      const { innerWidth, innerHeight } = window;
+      const x = e.clientX; const y = e.clientY;
+      const rotateY = (innerWidth / 2 - x) / 40; 
+      const rotateX = (innerHeight / 2 - y) / -40;
+      card.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mouse-x', `${x - rect.left}px`);
+      card.style.setProperty('--mouse-y', `${y - rect.top}px`);
+    });
   </script>
 
 </body>
