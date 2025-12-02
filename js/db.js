@@ -3,7 +3,7 @@ console.log("db.js loaded");
 if (!firebase.firestore) console.error("❌ Firestore not loaded");
 if (!firebase.auth) console.error("❌ Auth not loaded");
 
-const dbRef = firebase.firestore();   // renamed to avoid duplicate
+const dbRef = db;   // use db from firebase-init.js
 
 async function addEntry(entry) {
   if (!window.currentUser) {
@@ -54,18 +54,4 @@ function subscribeToEntries(callback) {
       .collection("users")
       .doc(uid)
       .collection("entries")
-      .orderBy("date")
-      .onSnapshot(
-        snap => callback(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
-        err => console.error("🔥 Firestore realtime error:", err)
-      );
-  });
-}
-
-function format(amount) {
-  if (isNaN(amount)) return "₹0.00";
-  return "₹" + amount.toLocaleString("en-IN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-}
+      .order
