@@ -1,6 +1,7 @@
 // js/db.js
 
 // Add a new entry
+console.log("db.js loaded");
 async function addEntry(entry) {
   entry.createdAt = Date.now();
   const result = await db.collection("entries").add(entry);
