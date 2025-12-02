@@ -59,6 +59,19 @@
     </div>
   </div>
 
+  <div id="delete-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3 style="color:#DC2626;">Delete Transaction?</h3>
+      <p style="color:#4B5563; margin-bottom:24px; font-size:0.95rem;">
+        Are you sure you want to remove this entry? This action cannot be undone.
+      </p>
+      <div class="modal-actions">
+        <button id="delete-cancel-btn">Keep it</button>
+        <button id="delete-confirm-btn" class="btn-danger">Yes, Delete</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
@@ -69,4 +82,5 @@
 
 </body>
 </html>
+
 
