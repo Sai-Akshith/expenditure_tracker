@@ -5,6 +5,37 @@
   gap: 20px;
   border-bottom: 1px solid #1f2937;
 }
+/* base link */
+.navbar a {
+  position: relative;
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.98rem;
+  padding-bottom: 4px;
+  transition: color 0.18s ease-out, transform 0.18s ease-out;
+}
+
+/* underline animation */
+.navbar a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background: #38bdf8;
+  transition: width 0.2s ease-out;
+}
+
+/* hover state */
+.navbar a:hover {
+  color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+.navbar a:hover::after {
+  width: 100%;
+}
 
 .navbar a {
   color: #e5e7eb;
@@ -14,4 +45,5 @@
 
 .navbar a:hover {
   color: #38bdf8;
+
 }
