@@ -5,9 +5,9 @@
   <title>Add Entry - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="css/style.css?v=5" />
-  <link rel="stylesheet" href="css/navbar.css?v=5" />
-  <link rel="stylesheet" href="css/form.css?v=5" />
+  <link rel="stylesheet" href="css/style.css?v=6" />
+  <link rel="stylesheet" href="css/navbar.css?v=6" />
+  <link rel="stylesheet" href="css/form.css?v=6" />
 </head>
 
 <body>
@@ -27,43 +27,58 @@
   <main class="page">
     <h1>Add Entry</h1>
 
-    <form id="entry-form">
-      <label for="date">Date</label>
-      <input type="date" id="date" required />
+    <div class="form-page-layout">
+      
+      <div class="form-container">
+        <form id="entry-form">
+          <label for="date">Date</label>
+          <input type="date" id="date" required />
 
-      <label for="type">Type</label>
-      <select id="type">
-        <option value="Expense">Expense</option>
-        <option value="Income">Income</option>
-      </select>
+          <label for="type">Type</label>
+          <select id="type">
+            <option value="Expense">Expense</option>
+            <option value="Income">Income</option>
+          </select>
 
-      <label for="category">Category</label>
-      <select id="category">
-        <option>Food & Groceries</option>
-        <option>Transportation</option>
-        <option>Bills & Utilities</option>
-        <option>Shopping</option>
-        <option>Entertainment</option>
-        <option>Health</option>
-        <option>Education</option>
-        <option>Other</option>
-      </select>
+          <label for="category">Category</label>
+          <select id="category">
+            <option>Food & Groceries</option>
+            <option>Transportation</option>
+            <option>Bills & Utilities</option>
+            <option>Shopping</option>
+            <option>Entertainment</option>
+            <option>Health</option>
+            <option>Education</option>
+            <option>Other</option>
+          </select>
 
-      <label for="amount">Amount (₹)</label>
-      <input type="number" id="amount" min="0" step="0.01" required />
+          <label for="amount">Amount (₹)</label>
+          <input type="number" id="amount" min="0" step="0.01" required />
 
-      <label for="method">Payment method (optional)</label>
-      <input type="text" id="method" placeholder="UPI, card, cash..." />
+          <label for="method">Payment method (optional)</label>
+          <input type="text" id="method" placeholder="UPI, card, cash..." />
 
-      <label for="description">Description (optional)</label>
-      <input type="text" id="description" placeholder="e.g. Swiggy lunch" />
+          <label for="description">Description (optional)</label>
+          <input type="text" id="description" placeholder="e.g. Swiggy lunch" />
 
-      <button type="submit">Save Entry</button>
-    </form>
+          <button type="submit">Save Entry</button>
+        </form>
 
-    <p style="margin-top:12px; font-size:0.85rem; color:#9ca3af; text-align: center;">
-      Entries sync across all your devices using cloud storage.
-    </p>
+        <p style="margin-top:12px; font-size:0.85rem; color:#9ca3af; text-align: center;">
+          Entries sync across all your devices using cloud storage.
+        </p>
+      </div>
+
+      <div class="animation-container">
+        <div id="character" class="character float-animation">
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master Emojis/Smilies/Face%20with%20Monocle.png" alt="Watching" class="char-state char-watching" />
+          
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/See-No-Evil%20Monkey.png" alt="Eyes Covered" class="char-state char-typing" />
+        </div>
+        <p class="animation-text">I'm watching your expenses...<br>(don't worry, it's private!)</p>
+      </div>
+
+    </div>
   </main>
 
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -79,7 +94,33 @@
 
     const form = document.getElementById("entry-form");
     const dateInput = document.getElementById("date");
+    const character = document.getElementById("character");
+    const formInputs = form.querySelectorAll("input, select");
+    let typingTimer;
 
+    // --- ANIMATION LOGIC ---
+    function startTyping() {
+      character.classList.add("typing-mode");
+      clearTimeout(typingTimer);
+    }
+
+    function stopTyping() {
+      // Delay going back to "watching" so it's not too jittery
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        character.classList.remove("typing-mode");
+      }, 500); // Wait 0.5s after last input
+    }
+
+    // Attach listeners to all form fields
+    formInputs.forEach(input => {
+      input.addEventListener("focus", startTyping);
+      input.addEventListener("input", startTyping);
+      input.addEventListener("blur", stopTyping);
+    });
+
+
+    // --- FORM SUBMISSION LOGIC ---
     // Set default date = today
     if (!dateInput.value) {
       dateInput.valueAsDate = new Date();
@@ -88,14 +129,16 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Double check auth (though auth.js should handle redirect)
       if (!window.currentUser) {
         alert("Please login first to add entries.");
         return;
       }
 
+      // Show watching state on submit
+      stopTyping();
+
       const entry = {
-        uid: window.currentUser.uid,              // store user ID
+        uid: window.currentUser.uid,
         date: dateInput.value,
         type: document.getElementById("type").value,
         category: document.getElementById("category").value,
@@ -108,11 +151,8 @@
       try {
         console.log("Saving entry →", entry);
         await addEntry(entry);
-        
-        // Success feedback
         alert("Entry saved successfully!");
 
-        // Reset fields except date
         document.getElementById("amount").value = "";
         document.getElementById("method").value = "";
         document.getElementById("description").value = "";
