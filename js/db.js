@@ -5,6 +5,9 @@ if (!firebase.auth) console.error("❌ Auth not loaded");
 
 const dbRef = db;   // use db from firebase-init.js
 
+/* -------------------------------------------------------
+   ADD ENTRY
+-------------------------------------------------------- */
 async function addEntry(entry) {
   if (!window.currentUser) {
     alert("Please login first.");
@@ -22,7 +25,12 @@ async function addEntry(entry) {
     .add(entry);
 }
 
+/* -------------------------------------------------------
+   UPDATE ENTRY
+-------------------------------------------------------- */
 async function updateEntry(id, data) {
+  if (!window.currentUser) throw new Error("User not logged in");
+
   const uid = window.currentUser.uid;
 
   return dbRef
@@ -33,7 +41,12 @@ async function updateEntry(id, data) {
     .update(data);
 }
 
+/* -------------------------------------------------------
+   DELETE ENTRY
+-------------------------------------------------------- */
 async function deleteEntry(id) {
+  if (!window.currentUser) throw new Error("User not logged in");
+
   const uid = window.currentUser.uid;
 
   return dbRef
@@ -44,6 +57,9 @@ async function deleteEntry(id) {
     .delete();
 }
 
+/* -------------------------------------------------------
+   REALTIME LISTENER
+-------------------------------------------------------- */
 function subscribeToEntries(callback) {
   firebase.auth().onAuthStateChanged(user => {
     if (!user) return callback([]);
@@ -54,4 +70,27 @@ function subscribeToEntries(callback) {
       .collection("users")
       .doc(uid)
       .collection("entries")
-      .order
+      .orderBy("date")
+      .onSnapshot(
+        snap => {
+          const items = snap.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          callback(items);
+        },
+        err => console.error("🔥 Firestore realtime error:", err)
+      );
+  });
+}
+
+/* -------------------------------------------------------
+   MONEY FORMATTER
+-------------------------------------------------------- */
+function format(amount) {
+  if (isNaN(amount)) return "₹0.00";
+  return "₹" + amount.toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
