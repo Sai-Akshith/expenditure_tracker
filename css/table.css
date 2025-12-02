@@ -175,3 +175,38 @@ td {
     width: 100%;
   }
 }
+
+/* ... (Keep all your existing table/badge styles) ... */
+
+/* --- ANIMATIONS --- */
+
+/* 1. PENCIL ROTATION */
+@keyframes pencil-wiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+  75% { transform: rotate(-10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.edit-btn.clicked svg {
+  animation: pencil-wiggle 0.5s ease-in-out;
+}
+
+/* 2. TRASH LID OPENING */
+@keyframes trash-open {
+  0% { transform: rotate(0deg) translateY(0); }
+  30% { transform: rotate(-25deg) translateY(-4px); } /* Open */
+  70% { transform: rotate(-25deg) translateY(-4px); } /* Hold */
+  100% { transform: rotate(0deg) translateY(0); }     /* Slam shut */
+}
+
+/* We target the specific class we will add to the SVG path below */
+.delete-btn .trash-lid {
+  transform-origin: bottom right; /* Hinges from the right side */
+  transition: transform 0.2s;
+}
+
+.delete-btn.clicked .trash-lid {
+  animation: trash-open 0.5s ease-in-out forwards;
+}
