@@ -1,9 +1,18 @@
-const KEY = "spending-data";
+// js/storage.js
+const STORAGE_KEY = "expenditure-tracker-v1";
 
 function loadEntries() {
-  return JSON.parse(localStorage.getItem(KEY) || "[]");
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.error("Failed to load entries", e);
+    return [];
+  }
 }
 
-function saveEntries(list) {
-  localStorage.setItem(KEY, JSON.stringify(list));
+function saveEntries(entries) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
 }
