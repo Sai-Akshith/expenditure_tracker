@@ -5,9 +5,9 @@
   <title>Add Entry - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="css/style.css?v=7" />
-  <link rel="stylesheet" href="css/navbar.css?v=7" />
-  <link rel="stylesheet" href="css/form.css?v=7" />
+  <link rel="stylesheet" href="css/style.css?v=9" />
+  <link rel="stylesheet" href="css/navbar.css?v=9" />
+  <link rel="stylesheet" href="css/form.css?v=9" />
 </head>
 
 <body>
@@ -71,11 +71,14 @@
 
       <div class="animation-container">
         <div id="character" class="character float-animation">
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Monocle.png" alt="Watching" class="char-state char-watching" />
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="Watching" class="char-state char-watching" />
           
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/See-No-Evil%20Monkey.png" alt="Eyes Covered" class="char-state char-typing" />
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Facepalming.png" alt="Eyes Covered" class="char-state char-typing" />
         </div>
-        <p class="animation-text">I'm watching your expenses...<br>(don't worry, it's private!)</p>
+        <p class="animation-text">
+          I'm analyzing your budget...<br>
+          <span style="font-size:0.85rem; opacity:0.7;">(and looking away when you type!)</span>
+        </p>
       </div>
 
     </div>
@@ -96,6 +99,7 @@
     const formInputs = form.querySelectorAll("input, select");
     let typingTimer;
 
+    // --- ANIMATION LOGIC ---
     function startTyping() {
       character.classList.add("typing-mode");
       clearTimeout(typingTimer);
@@ -105,7 +109,7 @@
       clearTimeout(typingTimer);
       typingTimer = setTimeout(() => {
         character.classList.remove("typing-mode");
-      }, 500);
+      }, 500); // Wait 0.5s before looking back
     }
 
     formInputs.forEach(input => {
@@ -126,7 +130,7 @@
         return;
       }
 
-      stopTyping();
+      stopTyping(); // Look back at the user
 
       const entry = {
         uid: window.currentUser.uid,
