@@ -5,8 +5,8 @@
   <title>Login - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
-  <link rel="stylesheet" href="css/style.css?v=17" />
-  <link rel="stylesheet" href="css/login.css?v=17" />
+  <link rel="stylesheet" href="css/style.css?v=18" />
+  <link rel="stylesheet" href="css/login.css?v=18" />
 </head>
 <body>
 
@@ -17,11 +17,7 @@
   </div>
 
   <div id="game-area">
-    <div id="bank-container">
-      <img src="https://em-content.zobj.net/source/microsoft-teams/337/piggy-bank_1f437.png" id="piggy-bank" alt="Piggy Bank">
-      <div class="bank-label">Feed me savings!</div>
     </div>
-  </div>
 
   <div class="login-container">
     <div class="login-card">
@@ -33,7 +29,7 @@
       </div>
       
       <h1>Welcome Back</h1>
-      <p class="subtitle">Drag the coins to the piggy bank!</p>
+      <p class="subtitle">Track your spending with confidence.</p>
 
       <button id="google-login-btn" class="google-btn">
         <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
@@ -59,9 +55,7 @@
 
   <script>
     const gameArea = document.getElementById('game-area');
-    const bankContainer = document.getElementById('bank-container');
-    const piggy = document.getElementById('piggy-bank');
-    const COIN_COUNT = 6; 
+    const COIN_COUNT = 8; 
 
     // 1. Create 3D Coins
     for (let i = 0; i < COIN_COUNT; i++) {
@@ -70,7 +64,7 @@
 
     function createCoin() {
       const coin = document.createElement('img');
-      // RELIABLE SOURCE: Emojipedia Microsoft Teams 3D
+      // Reliable Source: Emojipedia Microsoft Teams 3D Coin
       coin.src = "https://em-content.zobj.net/source/microsoft-teams/337/coin_1fa99.png";
       coin.classList.add('coin');
       coin.draggable = false; 
@@ -81,6 +75,7 @@
       
       coin.style.left = x + 'px';
       coin.style.top = y + 'px';
+      // Random Rotation
       coin.style.transform = `rotate(${Math.random() * 360}deg)`;
 
       makeDraggable(coin);
@@ -99,9 +94,10 @@
         startY = e.clientY;
         initialLeft = el.offsetLeft;
         initialTop = el.offsetTop;
+        
         el.style.zIndex = 1000;
         el.style.cursor = 'grabbing';
-        el.style.transition = 'none';
+        el.style.transition = 'none'; // Instant movement
       });
 
       window.addEventListener('mousemove', (e) => {
@@ -113,10 +109,14 @@
         el.style.top = `${initialTop + dy}px`;
       });
 
-      window.addEventListener('mouseup', (e) => {
+      window.addEventListener('mouseup', () => {
         if (!isDragging) return;
         isDragging = false;
-        checkDrop(el);
+        el.style.cursor = 'grab';
+        el.style.zIndex = 20; // Reset Z-Index
+        
+        // Optional: Add a subtle transition back to "rest" state if needed
+        el.style.transition = 'transform 0.2s';
       });
 
       // Touch Events (Mobile)
@@ -132,53 +132,17 @@
 
       window.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
-        e.preventDefault();
+        e.preventDefault(); // Prevent scrolling
         const dx = e.touches[0].clientX - startX;
         const dy = e.touches[0].clientY - startY;
         el.style.left = `${initialLeft + dx}px`;
         el.style.top = `${initialTop + dy}px`;
       }, { passive: false });
 
-      window.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
+      window.addEventListener('touchend', () => {
         isDragging = false;
-        checkDrop(el);
+        el.style.zIndex = 20;
       });
-    }
-
-    function checkDrop(coin) {
-      coin.style.cursor = 'grab';
-      coin.style.zIndex = 100;
-
-      const coinRect = coin.getBoundingClientRect();
-      const bankRect = bankContainer.getBoundingClientRect();
-
-      // Check collision
-      if (
-        coinRect.left < bankRect.right &&
-        coinRect.right > bankRect.left &&
-        coinRect.top < bankRect.bottom &&
-        coinRect.bottom > bankRect.top
-      ) {
-        dropInBank(coin);
-      }
-    }
-
-    function dropInBank(coin) {
-      // 1. Shrink and fade out coin (as if entering the pig)
-      coin.style.transition = 'all 0.3s ease-in';
-      coin.style.transform = 'scale(0) rotate(360deg)';
-      coin.style.opacity = '0';
-      
-      // 2. Bounce the Piggy Bank
-      piggy.classList.remove('bounce'); // reset
-      void piggy.offsetWidth; // trigger reflow
-      piggy.classList.add('bounce');
-
-      // 3. Remove coin after animation
-      setTimeout(() => {
-        coin.remove();
-      }, 300);
     }
   </script>
 
