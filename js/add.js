@@ -16,6 +16,7 @@ if (!dateInput.value) {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+  console.log("🚀 FORM SUBMITTED");
 
   const date = dateInput.value;
   const type = typeInput.value;
@@ -24,30 +25,13 @@ form.addEventListener("submit", async (e) => {
   const method = methodInput.value.trim();
   const description = descriptionInput.value.trim();
 
-  if (!date || isNaN(amount) || amount <= 0) {
-    alert("Please enter a valid date and amount.");
-    return;
-  }
+  console.log("Collected values:", { date, type, category, amount, method, description });
 
   try {
-    await addEntry({
-      date,
-      type,
-      category,
-      amount,
-      method,
-      description
-    });
-
-    alert("Entry saved ✅");
-
-    // reset fields (keep date)
-    amountInput.value = "";
-    methodInput.value = "";
-    descriptionInput.value = "";
+    console.log("Calling addEntry...");
+    await addEntry({ date, type, category, amount, method, description });
+    console.log("🔥 addEntry finished");
   } catch (err) {
-    console.error(err);
-    alert("Failed to save entry. Check console.");
+    console.error("❌ Firestore error:", err);
   }
 });
-
