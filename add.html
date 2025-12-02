@@ -1,55 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Add Entry - Spending Tracker</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/navbar.css">
-  <link rel="stylesheet" href="css/form.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/form.css" />
 </head>
-
 <body>
-
-  <!-- Navbar -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="add.html">Add Entry</a>
     <a href="history.html">History</a>
   </nav>
 
-  <h1>Add New Entry</h1>
+  <main class="page">
+    <h1>Add Entry</h1>
 
-  <form id="entry-form">
-    <label>Date</label>
-    <input type="date" id="date" required>
+    <form id="entry-form">
+      <label for="date">Date</label>
+      <input type="date" id="date" required />
 
-    <label>Type</label>
-    <select id="type">
-      <option>Expense</option>
-      <option>Income</option>
-    </select>
+      <label for="type">Type</label>
+      <select id="type">
+        <option value="Expense">Expense</option>
+        <option value="Income">Income</option>
+      </select>
 
-    <label>Category</label>
-    <select id="category">
-      <option>Food & Groceries</option>
-      <option>Transportation</option>
-      <option>Bills</option>
-      <option>Shopping</option>
-      <option>Other</option>
-    </select>
+      <label for="category">Category</label>
+      <select id="category">
+        <option>Food & Groceries</option>
+        <option>Transportation</option>
+        <option>Bills & Utilities</option>
+        <option>Shopping</option>
+        <option>Entertainment</option>
+        <option>Health</option>
+        <option>Education</option>
+        <option>Other</option>
+      </select>
 
-    <label>Amount</label>
-    <input type="number" id="amount" required>
+      <label for="amount">Amount (₹)</label>
+      <input type="number" id="amount" min="0" step="0.01" required />
 
-    <label>Description</label>
-    <input type="text" id="description">
+      <label for="method">Payment method (optional)</label>
+      <input type="text" id="method" placeholder="UPI, card, cash..." />
 
-    <button type="submit">Add Entry</button>
-  </form>
+      <label for="description">Description (optional)</label>
+      <input type="text" id="description" placeholder="e.g. Swiggy lunch" />
+
+      <button type="submit">Save Entry</button>
+    </form>
+
+    <p style="margin-top:12px;font-size:0.85rem;color:#9ca3af;">
+      Entries are stored only in this browser using localStorage.
+    </p>
+  </main>
 
   <script src="js/storage.js"></script>
   <script src="js/add.js"></script>
-
 </body>
-
 </html>
