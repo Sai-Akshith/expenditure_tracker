@@ -5,9 +5,9 @@
   <title>Add Entry - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="css/style.css?v=6" />
-  <link rel="stylesheet" href="css/navbar.css?v=6" />
-  <link rel="stylesheet" href="css/form.css?v=6" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
+  <link rel="stylesheet" href="css/navbar.css?v=7" />
+  <link rel="stylesheet" href="css/form.css?v=7" />
 </head>
 
 <body>
@@ -71,7 +71,7 @@
 
       <div class="animation-container">
         <div id="character" class="character float-animation">
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master Emojis/Smilies/Face%20with%20Monocle.png" alt="Watching" class="char-state char-watching" />
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Face%20with%20Monocle.png" alt="Watching" class="char-state char-watching" />
           
           <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/See-No-Evil%20Monkey.png" alt="Eyes Covered" class="char-state char-typing" />
         </div>
@@ -84,44 +84,36 @@
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
-
   <script src="js/firebase-init.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/db.js"></script>
 
   <script>
     console.log("add.js logic injected");
-
     const form = document.getElementById("entry-form");
     const dateInput = document.getElementById("date");
     const character = document.getElementById("character");
     const formInputs = form.querySelectorAll("input, select");
     let typingTimer;
 
-    // --- ANIMATION LOGIC ---
     function startTyping() {
       character.classList.add("typing-mode");
       clearTimeout(typingTimer);
     }
 
     function stopTyping() {
-      // Delay going back to "watching" so it's not too jittery
       clearTimeout(typingTimer);
       typingTimer = setTimeout(() => {
         character.classList.remove("typing-mode");
-      }, 500); // Wait 0.5s after last input
+      }, 500);
     }
 
-    // Attach listeners to all form fields
     formInputs.forEach(input => {
       input.addEventListener("focus", startTyping);
       input.addEventListener("input", startTyping);
       input.addEventListener("blur", stopTyping);
     });
 
-
-    // --- FORM SUBMISSION LOGIC ---
-    // Set default date = today
     if (!dateInput.value) {
       dateInput.valueAsDate = new Date();
     }
@@ -134,7 +126,6 @@
         return;
       }
 
-      // Show watching state on submit
       stopTyping();
 
       const entry = {
@@ -149,10 +140,8 @@
       };
 
       try {
-        console.log("Saving entry →", entry);
         await addEntry(entry);
         alert("Entry saved successfully!");
-
         document.getElementById("amount").value = "";
         document.getElementById("method").value = "";
         document.getElementById("description").value = "";
