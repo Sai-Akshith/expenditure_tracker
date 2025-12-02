@@ -6,9 +6,9 @@ body {
   padding: 0;
   height: 100vh;
   width: 100vw;
-  overflow: hidden; /* Stops scrollbars */
+  overflow: hidden;
   font-family: 'Inter', system-ui, sans-serif;
-  background: #F8FAFC; /* Light base color */
+  background: #F8FAFC;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,18 +21,17 @@ body {
   width: 100%; height: 100%;
   z-index: 0;
   overflow: hidden;
-  pointer-events: none; /* Let clicks pass through blobs */
+  pointer-events: none;
 }
 
 .blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px); /* Creates the soft gradient look */
+  filter: blur(80px);
   opacity: 0.6;
   animation: float 10s infinite alternate ease-in-out;
 }
 
-/* Blue Blob */
 .blob-1 {
   width: 500px; height: 500px;
   background: #3B82F6;
@@ -40,7 +39,6 @@ body {
   animation-delay: 0s;
 }
 
-/* Teal/Green Blob */
 .blob-2 {
   width: 400px; height: 400px;
   background: #10B981;
@@ -48,7 +46,6 @@ body {
   animation-delay: -5s;
 }
 
-/* Purple Blob */
 .blob-3 {
   width: 300px; height: 300px;
   background: #8B5CF6;
@@ -67,22 +64,22 @@ body {
   100% { transform: translate(-30px, -40px); }
 }
 
-/* --- INTERACTIVE LAYER --- */
+/* --- GAME LAYER --- */
 #game-area {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  z-index: 5; /* Above background, below login card */
-  pointer-events: none; /* Important: lets clicks pass through empty space */
+  z-index: 5;
+  pointer-events: none; 
 }
 
 /* 3D Coins */
 .coin {
-  width: 64px; /* Slightly larger for interaction */
+  width: 64px;
   height: 64px;
   position: absolute;
   cursor: grab;
-  pointer-events: auto; /* Enable dragging for coins */
+  pointer-events: auto;
   z-index: 20;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
   transition: transform 0.2s;
@@ -98,22 +95,19 @@ body {
 /* --- GLASS LOGIN CARD --- */
 .login-container {
   position: relative;
-  z-index: 30; /* Highest priority */
+  z-index: 30;
   width: 100%;
   padding: 20px;
   display: flex;
   justify-content: center;
-  pointer-events: none; /* Allow clicks to pass through container padding */
+  pointer-events: none;
 }
 
 .login-card {
-  pointer-events: auto; /* Re-enable clicks on the card itself */
-  
-  /* Glassmorphism Effect */
+  pointer-events: auto;
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  
   width: 100%;
   max-width: 380px;
   padding: 48px 32px;
@@ -121,8 +115,6 @@ body {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.5);
   text-align: center;
-  
-  /* Entry Animation */
   animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
   transform: translateY(30px);
@@ -132,7 +124,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- TYPOGRAPHY & UI --- */
+/* --- ANIMATED ICON (The Unique Part) --- */
 .brand-icon {
   width: 56px; height: 56px;
   background: linear-gradient(135deg, #2563EB, #1D4ED8);
@@ -143,10 +135,57 @@ body {
   justify-content: center;
   margin: 0 auto 24px;
   box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+  
+  /* Positioning for the shine effect */
+  position: relative;
+  overflow: hidden; 
+  
+  /* 1. Entrance 3D Flip */
+  animation: flipIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.brand-icon svg { width: 30px; height: 30px; }
+.brand-icon svg { 
+  width: 30px; height: 30px; 
+  position: relative;
+  z-index: 2; /* Keep icon above the shine */
+}
 
+/* 2. The "Shine" Effect */
+.brand-icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.4) 50%, 
+    rgba(255,255,255,0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: sheen 4s infinite; /* Repeats every 4 seconds */
+}
+
+@keyframes flipIn {
+  0% { 
+    opacity: 0; 
+    transform: rotateY(-180deg) scale(0.5); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: rotateY(0deg) scale(1); 
+  }
+}
+
+@keyframes sheen {
+  0% { left: -150%; }
+  20% { left: 150%; } /* Fast swipe across */
+  100% { left: 150%; } /* Wait for next loop */
+}
+
+/* --- TYPOGRAPHY --- */
 h1 {
   font-size: 1.75rem;
   font-weight: 700;
