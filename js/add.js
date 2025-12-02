@@ -1,4 +1,5 @@
 // js/add.js
+console.log("add.js loaded successfully");
 
 const form = document.getElementById("entry-form");
 const dateInput = document.getElementById("date");
@@ -49,3 +50,4 @@ form.addEventListener("submit", async (e) => {
     alert("Failed to save entry. Check console.");
   }
 });
+
