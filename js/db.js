@@ -16,6 +16,8 @@ async function addEntry(entry) {
 
   console.log("Adding entry →", entry);
   const uid = window.currentUser.uid;
+  
+  // Add timestamp
   entry.createdAt = Date.now();
 
   return dbRef
@@ -88,8 +90,12 @@ function subscribeToEntries(callback) {
    MONEY FORMATTER
 -------------------------------------------------------- */
 function format(amount) {
-  if (isNaN(amount)) return "₹0.00";
-  return "₹" + amount.toLocaleString("en-IN", {
+  // Ensure we are working with a Number, not a string
+  const num = Number(amount);
+  
+  if (isNaN(num)) return "₹0.00";
+  
+  return "₹" + num.toLocaleString("en-IN", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
