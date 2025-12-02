@@ -207,6 +207,98 @@ td {
   transition: transform 0.2s;
 }
 
+/* ... (Keep your existing table and animation styles) ... */
+
+/* --- CUSTOM MODAL STYLES --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; 
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  backdrop-filter: blur(2px);     /* Modern blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-box {
+  background: white;
+  padding: 24px;
+  width: 90%;
+  max-width: 350px;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: scale(1);
+  animation: popIn 0.2s ease-out;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-box h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #111827;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.modal-box input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.modal-box input:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modal-actions button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+#modal-cancel-btn {
+  background: #F3F4F6;
+  color: #374151;
+}
+#modal-cancel-btn:hover { background: #E5E7EB; }
+
+#modal-save-btn {
+  background: #2563EB;
+  color: white;
+}
+#modal-save-btn:hover { background: #1D4ED8; }
+
 .delete-btn.clicked .trash-lid {
   animation: trash-open 0.5s ease-in-out forwards;
 }
+
