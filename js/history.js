@@ -4,41 +4,64 @@ console.log("history.js loaded");
 const tbody = document.getElementById("history-body");
 const emptyMsg = document.getElementById("empty-msg");
 
-// --- MODAL ELEMENTS ---
-const modal = document.getElementById("edit-modal");
+// --- EDIT MODAL ELEMENTS ---
+const editModal = document.getElementById("edit-modal");
 const modalInput = document.getElementById("modal-amount-input");
 const saveBtn = document.getElementById("modal-save-btn");
 const cancelBtn = document.getElementById("modal-cancel-btn");
-let currentEditId = null; // Stores which ID we are currently editing
 
-// --- MODAL FUNCTIONS ---
+// --- DELETE MODAL ELEMENTS ---
+const deleteModal = document.getElementById("delete-modal");
+const deleteConfirmBtn = document.getElementById("delete-confirm-btn");
+const deleteCancelBtn = document.getElementById("delete-cancel-btn");
+
+// STATE
+let currentEditId = null;
+let currentDeleteId = null;
+
+// ===========================
+//  MODAL FUNCTIONS
+// ===========================
+
+// --- EDIT ---
 function openEditModal(id, currentAmount) {
   currentEditId = id;
-  // Strip the '₹' symbol if present to just get the number
   const cleanAmount = currentAmount.replace(/[^0-9.]/g, ''); 
   modalInput.value = cleanAmount;
-  
-  modal.classList.remove("hidden");
+  editModal.classList.remove("hidden");
   modalInput.focus();
 }
 
 function closeEditModal() {
-  modal.classList.add("hidden");
+  editModal.classList.add("hidden");
   currentEditId = null;
   modalInput.value = "";
 }
 
-// Attach Modal Event Listeners
+// --- DELETE ---
+function openDeleteModal(id) {
+  currentDeleteId = id;
+  deleteModal.classList.remove("hidden");
+}
+
+function closeDeleteModal() {
+  deleteModal.classList.add("hidden");
+  currentDeleteId = null;
+}
+
+// ===========================
+//  EVENT LISTENERS (MODALS)
+// ===========================
+
+// Edit Logic
 if(saveBtn) {
   saveBtn.onclick = async () => {
     if (!currentEditId) return;
-    
     const newVal = parseFloat(modalInput.value);
     if (isNaN(newVal) || newVal < 0) {
       alert("Please enter a valid amount.");
       return;
     }
-
     try {
       await updateEntry(currentEditId, { amount: newVal });
       closeEditModal();
@@ -48,18 +71,33 @@ if(saveBtn) {
     }
   };
 }
+if(cancelBtn) cancelBtn.onclick = closeEditModal;
 
-if(cancelBtn) {
-  cancelBtn.onclick = closeEditModal;
+// Delete Logic
+if(deleteConfirmBtn) {
+  deleteConfirmBtn.onclick = async () => {
+    if (!currentDeleteId) return;
+    try {
+      await deleteEntry(currentDeleteId);
+      closeDeleteModal();
+    } catch (err) {
+      console.error("Delete failed", err);
+      alert("Delete failed");
+    }
+  };
 }
+if(deleteCancelBtn) deleteCancelBtn.onclick = closeDeleteModal;
 
-// Close modal if clicking outside the box
+// Close any modal if clicking outside
 window.onclick = (e) => {
-  if (e.target === modal) closeEditModal();
+  if (e.target === editModal) closeEditModal();
+  if (e.target === deleteModal) closeDeleteModal();
 };
 
 
-// --- MAIN LOGIC ---
+// ===========================
+//  MAIN TABLE LOGIC
+// ===========================
 firebase.auth().onAuthStateChanged(async (user) => {
   if (!user) {
     if(tbody) tbody.innerHTML = "";
@@ -111,30 +149,28 @@ firebase.auth().onAuthStateChanged(async (user) => {
 
     // --- BUTTON LISTENERS ---
     
-    // DELETE
+    // DELETE (Triggers Animation + Modal)
     document.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.onclick = async () => {
-        btn.classList.add("clicked"); // Animation
-        await new Promise(r => setTimeout(r, 400)); // Wait for animation
+        btn.classList.add("clicked"); // 1. Start Animation
         
-        if (confirm("Delete this entry?")) {
-          await deleteEntry(btn.dataset.id);
-        }
-        btn.classList.remove("clicked");
+        await new Promise(r => setTimeout(r, 400)); // 2. Wait for lid to open
+        
+        openDeleteModal(btn.dataset.id); // 3. Open Custom Modal
+        
+        btn.classList.remove("clicked"); // 4. Reset Animation
       };
     });
 
-    // EDIT (Now opens our Custom Modal)
+    // EDIT (Triggers Animation + Modal)
     document.querySelectorAll(".edit-btn").forEach((btn) => {
       btn.onclick = async () => {
-        btn.classList.add("clicked"); // Animation
-        await new Promise(r => setTimeout(r, 400)); // Wait for wiggle
+        btn.classList.add("clicked");
+        await new Promise(r => setTimeout(r, 400)); 
         btn.classList.remove("clicked"); 
 
-        // Get current amount from the table row to pre-fill the input
         const row = btn.closest("tr");
         const amountText = row.querySelector('td[data-label="Amount"]').textContent;
-        
         openEditModal(btn.dataset.id, amountText);
       };
     });
