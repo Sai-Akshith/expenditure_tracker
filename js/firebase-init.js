@@ -9,8 +9,7 @@ const firebaseConfig = {
   projectId: "expenditure-tracker-5569c",
   storageBucket: "expenditure-tracker-5569c.firebasestorage.app",
   messagingSenderId: "946973275836",
-  appId: "1:946973275836:web:d388f6ff00eb76b4cf82b9",
-  measurementId: "G-LSYZKXVB0S"
+  appId: "1:946973275836:web:d388f6ff00eb76b4cf82b9"
 };
 
 // Initialize Firebase
@@ -18,11 +17,3 @@ firebase.initializeApp(firebaseConfig);
 
 // Make Firestore available
 const db = firebase.firestore();
-
-// Enable experimental long polling for GitHub Pages (fixes connection issues)
-db.settings({
-  experimentalForceLongPolling: true,
-  merge: true
-});
-
-console.log("Firebase initialized successfully");
