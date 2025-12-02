@@ -9,7 +9,9 @@
   <link rel="stylesheet" href="css/navbar.css" />
   <link rel="stylesheet" href="css/form.css" />
 </head>
+
 <body>
+  <!-- Navbar -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="add.html">Add Entry</a>
@@ -19,6 +21,12 @@
   <main class="page">
     <h1>Add Entry</h1>
 
+    <!-- LOGIN UI -->
+    <button id="login-btn">Login with Google</button>
+    <button id="logout-btn" style="display:none;">Logout</button>
+    <p id="user-info" style="color:#ccc; font-size:0.9rem;"></p>
+
+    <!-- Add Entry Form -->
     <form id="entry-form">
       <label for="date">Date</label>
       <input type="date" id="date" required />
@@ -58,17 +66,62 @@
     </p>
   </main>
 
-    <!-- Firebase scripts -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 
-  <!-- Your Firebase config + DB helpers -->
+  <!-- Project scripts -->
   <script src="js/firebase-init.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/db.js"></script>
 
-  <!-- Add Entry logic -->
-  <script src="js/add.js"></script>
+  <!-- Add Entry Logic -->
+  <script>
+    console.log("add.js logic injected");
+
+    const form = document.getElementById("entry-form");
+    const dateInput = document.getElementById("date");
+
+    // Set default date = today
+    if (!dateInput.value) {
+      dateInput.valueAsDate = new Date();
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!window.currentUser) {
+        alert("Please login first to add entries.");
+        return;
+      }
+
+      const entry = {
+        uid: window.currentUser.uid,              // store user ID
+        date: dateInput.value,
+        type: document.getElementById("type").value,
+        category: document.getElementById("category").value,
+        amount: parseFloat(document.getElementById("amount").value),
+        method: document.getElementById("method").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        createdAt: Date.now()
+      };
+
+      try {
+        console.log("Saving entry →", entry);
+        await addEntry(entry);
+        alert("Entry saved successfully!");
+
+        // Reset fields except date
+        document.getElementById("amount").value = "";
+        document.getElementById("method").value = "";
+        document.getElementById("description").value = "";
+      } catch (err) {
+        console.error("❌ Error saving entry:", err);
+        alert("Error saving entry. Check console.");
+      }
+    });
+  </script>
+
 </body>
 </html>
-
-
