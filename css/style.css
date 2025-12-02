@@ -88,3 +88,43 @@ h1 {
 #login-btn, #logout-btn {
   margin-top: 20px;
 }
+
+/* ... (Keep all existing code) ... */
+
+/* --- PAGE TRANSITION ANIMATIONS --- */
+
+/* 1. Animation for elements APPEARING on the screen (Fade In + Slide Up) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply this to the main container so every page loads smoothly */
+.page, .login-card {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 2. Animation for elements LEAVING the screen (Zoom Out + Fade) */
+.page-exit-active {
+  animation: zoomOutFade 0.5s ease-in-out forwards;
+  pointer-events: none; /* Prevent clicking while fading out */
+}
+
+@keyframes zoomOutFade {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(4px); /* cinematic blur effect */
+  }
+}
