@@ -5,23 +5,27 @@
   <title>Dashboard - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- styles -->
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/navbar.css" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
+  <link rel="stylesheet" href="css/navbar.css?v=5" />
 </head>
 <body>
-  <!-- Navbar -->
+  
   <nav class="navbar">
-    <a href="index.html">Home</a>
-    <a href="add.html">Add Entry</a>
-    <a href="history.html">History</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="add.html">Add Entry</a>
+      <a href="history.html">History</a>
+    </div>
+    
+    <div class="nav-profile">
+      <span id="nav-user-email"></span>
+      <button id="nav-logout-btn">Logout</button>
+    </div>
   </nav>
 
-  <!-- Page content -->
   <main class="page">
     <h1>Dashboard</h1>
 
-    <!-- 3 summary cards -->
     <section class="summary-grid">
       <div class="summary-card">
         <div class="summary-label">Total Income</div>
@@ -39,23 +43,14 @@
       </div>
     </section>
 
-    <!-- AUTH UI -->
-    <button id="login-btn">Login with Google</button>
-    <button id="logout-btn" style="display:none;">Logout</button>
-    <p id="user-info" style="color:#ccc; font-size:0.9rem;"></p>
+    </main>
 
-  </main>
-
-  <!-- Firebase core -->
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 
-  <!-- Firestore -->
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
 
-  <!-- Auth -->
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
 
-  <!-- your scripts -->
   <script src="js/firebase-init.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/db.js"></script>
