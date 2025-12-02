@@ -5,8 +5,8 @@
   <title>Login - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
-  <link rel="stylesheet" href="css/style.css?v=8" />
-  <link rel="stylesheet" href="css/login.css?v=8" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/login.css?v=13" />
 </head>
 <body>
 
@@ -14,6 +14,15 @@
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
+  </div>
+
+  <div id="game-area">
+    <div id="jar-container">
+      <div class="jar-neck"></div>
+      <div class="glass-jar" id="glass-jar">
+        </div>
+      <div class="jar-label">Savings Jar</div>
+    </div>
   </div>
 
   <div class="login-container">
@@ -26,7 +35,7 @@
       </div>
       
       <h1>Welcome Back</h1>
-      <p class="subtitle">Track your spending with confidence.</p>
+      <p class="subtitle">Pick up the coins while you think!</p>
 
       <button id="google-login-btn" class="google-btn">
         <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
@@ -49,6 +58,122 @@
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
   <script src="js/firebase-init.js"></script>
   <script src="js/auth.js"></script>
+
+  <script>
+    const gameArea = document.getElementById('game-area');
+    const jar = document.getElementById('glass-jar');
+    const COIN_COUNT = 8; // Number of coins to scatter
+
+    // 1. Create Coins
+    for (let i = 0; i < COIN_COUNT; i++) {
+      createCoin();
+    }
+
+    function createCoin() {
+      const coin = document.createElement('div');
+      coin.classList.add('coin');
+      coin.innerHTML = '₹';
+      
+      // Random Position (avoiding the very center roughly)
+      const x = Math.random() * (window.innerWidth - 60);
+      const y = Math.random() * (window.innerHeight - 60);
+      
+      coin.style.left = x + 'px';
+      coin.style.top = y + 'px';
+      // Random slight rotation for realism
+      coin.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+      // Make Draggable
+      makeDraggable(coin);
+      
+      gameArea.appendChild(coin);
+    }
+
+    // 2. Drag Logic
+    function makeDraggable(el) {
+      let isDragging = false;
+      let offset = { x: 0, y: 0 };
+
+      el.addEventListener('mousedown', startDrag);
+      el.addEventListener('touchstart', startDrag, { passive: false });
+
+      function startDrag(e) {
+        isDragging = true;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        offset.x = clientX - el.getBoundingClientRect().left;
+        offset.y = clientY - el.getBoundingClientRect().top;
+        
+        el.style.zIndex = 1000; // Bring to front
+        el.style.transition = 'none'; // Remove transition for smooth dragging
+        el.style.cursor = 'grabbing';
+      }
+
+      window.addEventListener('mousemove', moveDrag);
+      window.addEventListener('touchmove', moveDrag, { passive: false });
+
+      function moveDrag(e) {
+        if (!isDragging) return;
+        e.preventDefault(); // Prevent scrolling on mobile
+
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        el.style.left = (clientX - offset.x) + 'px';
+        el.style.top = (clientY - offset.y) + 'px';
+      }
+
+      window.addEventListener('mouseup', endDrag);
+      window.addEventListener('touchend', endDrag);
+
+      function endDrag(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        el.style.cursor = 'grab';
+        el.style.zIndex = 100; // Reset z-index
+
+        // CHECK IF DROPPED IN JAR
+        const coinRect = el.getBoundingClientRect();
+        const jarRect = jar.getBoundingClientRect();
+
+        // Simple collision detection
+        if (
+          coinRect.left > jarRect.left &&
+          coinRect.right < jarRect.right &&
+          coinRect.top > jarRect.top &&
+          coinRect.bottom < jarRect.bottom
+        ) {
+          dropInJar(el);
+        }
+      }
+    }
+
+    function dropInJar(coin) {
+      // 1. Remove drag listeners (make it static)
+      const newCoin = coin.cloneNode(true);
+      coin.remove(); // Remove old draggable coin
+      
+      // 2. Add to jar container
+      jar.appendChild(newCoin);
+      
+      // 3. Style it to look "inside"
+      newCoin.style.position = 'absolute';
+      newCoin.style.transition = 'all 0.4s ease-in';
+      newCoin.style.transform = `rotate(${Math.random() * 360}deg)`;
+      
+      // 4. Randomize position at bottom of jar
+      // jar height is approx 120px. 
+      const randomLeft = 10 + Math.random() * (jar.clientWidth - 50); 
+      const randomTop = (jar.clientHeight - 45) - (Math.random() * 20); // Stack near bottom
+      
+      // Reset coordinates to be relative to the jar now
+      setTimeout(() => {
+        newCoin.style.left = randomLeft + 'px';
+        newCoin.style.top = randomTop + 'px';
+      }, 50);
+    }
+  </script>
 
 </body>
 </html>
