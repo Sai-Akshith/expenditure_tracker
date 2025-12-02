@@ -35,13 +35,13 @@ form button {
   font-weight: 500;
   background: linear-gradient(135deg, #38bdf8, #22c55e);
   color: #0b1120;
-}
 
-/* animation */
+  /* animation */
   transition:
     transform 0.16s ease-out,
     box-shadow 0.16s ease-out,
     filter 0.16s ease-out;
+    
   box-shadow: 0 10px 20px rgba(34, 197, 94, 0.35);
 }
 
