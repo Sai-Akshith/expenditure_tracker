@@ -42,15 +42,14 @@ h1 {
   border-radius: 12px;
   padding: 12px 16px;
   border: 1px solid #1f2937;
-}
 
-
-/* animation bits */
+  /* animation bits */
   transition:
     transform 0.18s ease-out,
     box-shadow 0.18s ease-out,
     border-color 0.18s ease-out,
     background 0.18s ease-out;
+  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.8);
 }
 
 /* hover effect */
@@ -60,30 +59,3 @@ h1 {
   border-color: #38bdf8;
   background: #02081f;
 }
-
-.summary-label {
-  font-size: 0.8rem;
-  color: #9ca3af;
-  margin-bottom: 4px;
-}
-
-.summary-value {
-  font-size: 1.3rem;
-  font-weight: 600;
-}
-
-.summary-value.income {
-  color: #4ade80;
-}
-.summary-value.expense {
-  color: #f97373;
-}
-.summary-value.balance {
-  color: #38bdf8;
-}
-
-/* Paragraph spacing */
-p {
-  margin-bottom: 8px;
-}
-
