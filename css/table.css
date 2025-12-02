@@ -11,7 +11,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.92rem;
-  min-width: 600px; /* Forces scroll on very small screens if not in card mode */
+  min-width: 600px;
 }
 
 /* Header Styles */
@@ -50,7 +50,7 @@ td {
   vertical-align: middle;
 }
 
-/* BADGES (The pill shapes) */
+/* BADGES */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -74,15 +74,15 @@ td {
   border: 1px solid #FECACA;
 }
 
-/* Action Buttons (Cleaner look) */
+/* --- UPDATED ACTION BUTTONS --- */
 .actions-cell {
   display: flex;
   gap: 8px;
 }
 
 .btn-icon {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 6px;
   border: none;
   display: flex;
@@ -91,31 +91,42 @@ td {
   cursor: pointer;
   transition: all 0.2s;
   background: transparent;
-  font-size: 1.1rem;
 }
 
+/* SVG Styling */
+.btn-icon svg {
+  width: 18px;
+  height: 18px;
+  pointer-events: none; /* Allows click to pass through to button */
+}
+
+/* Edit Button Colors */
 .edit-btn {
-  color: #3B82F6;
+  color: #3B82F6; /* Blue */
   background: #EFF6FF;
 }
-.edit-btn:hover { background: #DBEAFE; transform: translateY(-1px); }
+.edit-btn:hover {
+  background: #DBEAFE;
+  color: #2563EB;
+}
 
+/* Delete Button Colors */
 .delete-btn {
-  color: #EF4444;
+  color: #EF4444; /* Red */
   background: #FEF2F2;
 }
-.delete-btn:hover { background: #FEE2E2; transform: translateY(-1px); }
+.delete-btn:hover {
+  background: #FEE2E2;
+  color: #DC2626;
+}
 
 /* --- MOBILE CARD VIEW --- */
-/* This transforms the table into cards on screens smaller than 768px */
 @media (max-width: 768px) {
   table, thead, tbody, th, td, tr {
     display: block;
   }
 
-  thead {
-    display: none; /* Hide headers */
-  }
+  thead { display: none; }
 
   .table-container {
     background: transparent;
@@ -144,7 +155,6 @@ td {
     font-size: 0.95rem;
   }
 
-  /* Add labels before the content using data-label attribute */
   td::before {
     content: attr(data-label);
     font-weight: 600;
@@ -153,10 +163,9 @@ td {
     text-transform: uppercase;
   }
 
-  /* Specific tweaks for mobile layout */
-  td:nth-child(1) { order: -1; font-weight: 600; color: #111827; } /* Date */
-  td:nth-child(2) { order: -1; } /* Type Badge */
-  td:nth-child(4) { order: -1; font-size: 1.1rem; font-weight: 700; color: #111827; } /* Amount */
+  td:nth-child(1) { order: -1; font-weight: 600; color: #111827; }
+  td:nth-child(2) { order: -1; }
+  td:nth-child(4) { order: -1; font-size: 1.1rem; font-weight: 700; color: #111827; }
   
   .actions-cell {
     margin-top: 12px;
