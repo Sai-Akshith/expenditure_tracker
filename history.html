@@ -9,16 +9,24 @@
   <link rel="stylesheet" href="css/navbar.css" />
   <link rel="stylesheet" href="css/table.css" />
 </head>
+
 <body>
+  <!-- Navbar -->
   <nav class="navbar">
     <a href="index.html">Home</a>
     <a href="add.html">Add Entry</a>
     <a href="history.html">History</a>
   </nav>
 
+  <!-- AUTH Buttons -->
+  <button id="login-btn">Login with Google</button>
+  <button id="logout-btn" style="display:none;">Logout</button>
+  <p id="user-info" style="color:#ccc; font-size:0.9rem;"></p>
+
   <main class="page">
     <h1>History</h1>
 
+    <!-- Table -->
     <table>
       <thead>
         <tr>
@@ -39,47 +47,86 @@
     </p>
   </main>
 
-  <!-- Edit Modal -->
-  <div id="edit-modal" class="modal hidden">
-    <div class="modal-backdrop"></div>
-    <div class="modal-content">
-      <h2>Edit Entry</h2>
-
-      <form id="edit-form">
-        <label>Date</label>
-        <input type="date" id="edit-date" required />
-
-        <label>Type</label>
-        <select id="edit-type">
-          <option value="Expense">Expense</option>
-          <option value="Income">Income</option>
-        </select>
-
-        <label>Category</label>
-        <input type="text" id="edit-category" required />
-
-        <label>Amount (₹)</label>
-        <input type="number" id="edit-amount" min="0" step="0.01" required />
-
-        <label>Method</label>
-        <input type="text" id="edit-method" />
-
-        <label>Description</label>
-        <input type="text" id="edit-description" />
-
-        <div class="modal-actions">
-          <button type="button" id="edit-cancel">Cancel</button>
-          <button type="submit" id="edit-save">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- scripts -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+
+  <!-- Project Scripts -->
   <script src="js/firebase-init.js"></script>
+  <script src="js/auth.js"></script>
   <script src="js/db.js"></script>
-  <script src="js/history.js"></script>
+
+  <script>
+    console.log("history.js inline logic loaded");
+
+    const tbody = document.getElementById("history-body");
+    const emptyMsg = document.getElementById("empty-msg");
+
+    // Wait for login before loading entries
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) {
+        tbody.innerHTML = "";
+        emptyMsg.textContent = "Please log in to view your history.";
+        return;
+      }
+
+      // Subscribe to only the logged in user's entries
+      subscribeToEntries((entries) => {
+
+        // Filter entries by uid
+        const userEntries = entries.filter(e => e.uid === user.uid);
+
+        if (userEntries.length === 0) {
+          tbody.innerHTML = "";
+          emptyMsg.textContent = "No entries yet.";
+          return;
+        }
+
+        emptyMsg.textContent = "";
+        tbody.innerHTML = "";
+
+        userEntries.forEach(entry => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${entry.date}</td>
+            <td>${entry.type}</td>
+            <td>${entry.category}</td>
+            <td>₹${entry.amount.toFixed(2)}</td>
+            <td>${entry.method || "-"}</td>
+            <td>${entry.description || "-"}</td>
+            <td>
+              <button class="edit-btn" data-id="${entry.id}">Edit</button>
+              <button class="delete-btn" data-id="${entry.id}">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Delete button
+        document.querySelectorAll(".delete-btn").forEach(btn => {
+          btn.onclick = async () => {
+            const id = btn.dataset.id;
+            if (confirm("Delete this entry?")) {
+              await deleteEntry(id);
+            }
+          }
+        });
+
+        // Edit button (simple edit)
+        document.querySelectorAll(".edit-btn").forEach(btn => {
+          btn.onclick = async () => {
+            const id = btn.dataset.id;
+            const newAmount = prompt("Enter new amount:");
+            if (newAmount) {
+              await updateEntry(id, { amount: parseFloat(newAmount) });
+            }
+          }
+        });
+
+      });
+    });
+  </script>
+
 </body>
 </html>
