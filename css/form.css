@@ -1,0 +1,38 @@
+form {
+  margin-top: 20px;
+  max-width: 500px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+form input,
+form select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  margin-bottom: 12px;
+}
+
+form input:focus,
+form select:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+form button {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  background: linear-gradient(135deg, #38bdf8, #22c55e);
+  color: #0b1120;
+}
