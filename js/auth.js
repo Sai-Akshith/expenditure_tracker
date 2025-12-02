@@ -1,60 +1,65 @@
 // js/auth.js
 console.log("auth.js loaded");
 
-// Ensure Firebase Auth is loaded
-if (!firebase.auth) {
-  console.error("❌ Firebase Auth library not loaded. Did you include firebase-auth-compat.js?");
-}
-
-// Google provider
 const provider = new firebase.auth.GoogleAuthProvider();
 
-// Login button
-document.getElementById("login-btn").onclick = () => {
-  firebase.auth()
-    .signInWithPopup(provider)
-    .then(result => {
-      console.log("✅ Logged in:", result.user);
-      alert("Login successful!");
-    })
-    .catch(err => {
-      console.error("❌ Login error:", err);
-      alert("Login failed. Check console.");
-    });
-};
+// Detect current page
+const isLoginPage = window.location.pathname.includes("login.html");
 
-// Logout button
-document.getElementById("logout-btn").onclick = () => {
-  firebase.auth().signOut()
-    .then(() => {
+// 1. LOGIN FUNCTION
+const loginBtn = document.getElementById("google-login-btn");
+if (loginBtn) {
+  loginBtn.onclick = () => {
+    firebase.auth()
+      .signInWithPopup(provider)
+      .then((result) => {
+        console.log("✅ Logged in:", result.user);
+        // Redirect to dashboard immediately after login
+        window.location.href = "index.html";
+      })
+      .catch((err) => {
+        console.error("❌ Login error:", err);
+        alert("Login failed.");
+      });
+  };
+}
+
+// 2. LOGOUT FUNCTION
+// We now attach this to the Navbar Logout button
+const logoutBtn = document.getElementById("nav-logout-btn");
+if (logoutBtn) {
+  logoutBtn.onclick = () => {
+    firebase.auth().signOut().then(() => {
       console.log("👋 User logged out");
-      alert("Logged out");
+      window.location.href = "login.html";
     });
-};
+  };
+}
 
-// Auth listener (runs whenever user logs in/out)
-firebase.auth().onAuthStateChanged(user => {
-  const loginBtn = document.getElementById("login-btn");
-  const logoutBtn = document.getElementById("logout-btn");
-  const userInfo = document.getElementById("user-info");
-
+// 3. GATEKEEPER LOGIC (Redirects)
+firebase.auth().onAuthStateChanged((user) => {
   if (user) {
-    console.log("🔐 User logged in:", user.email);
-
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "block";
-
-    userInfo.textContent = "Logged in as: " + user.email;
-
-    // Global user object so db.js and add.js can access UID
+    // User IS logged in
+    console.log("🔐 User detected:", user.email);
     window.currentUser = user;
+
+    // If they are on the login page, send them to dashboard
+    if (isLoginPage) {
+      window.location.href = "index.html";
+    }
+
+    // Update User Info in Navbar (if it exists)
+    const navUser = document.getElementById("nav-user-email");
+    if (navUser) navUser.textContent = user.email;
+
   } else {
-    console.log("🚫 No user logged in");
-
-    loginBtn.style.display = "block";
-    logoutBtn.style.display = "none";
-    userInfo.textContent = "";
-
+    // User is NOT logged in
+    console.log("🚫 No user");
     window.currentUser = null;
+
+    // If they are NOT on the login page, kick them out to login.html
+    if (!isLoginPage) {
+      window.location.href = "login.html";
+    }
   }
 });
