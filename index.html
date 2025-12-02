@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Dashboard - Spending Tracker</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/navbar.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- styles -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/navbar.css" />
 </head>
-
 <body>
-
   <!-- Navbar -->
   <nav class="navbar">
     <a href="index.html">Home</a>
@@ -15,23 +17,44 @@
     <a href="history.html">History</a>
   </nav>
 
-  <h1>Dashboard</h1>
-  <p>Total Income: <span id="total-income">₹0</span></p>
-  <p>Total Expense: <span id="total-expense">₹0</span></p>
-  <p>Balance: <span id="balance">₹0</span></p>
+  <!-- Page content -->
+  <main class="page">
+    <h1>Dashboard</h1>
 
+    <section class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-label">Total Income</div>
+        <div class="summary-value income" id="total-income">₹0</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-label">Total Expense</div>
+        <div class="summary-value expense" id="total-expense">₹0</div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-label">Balance</div>
+        <div class="summary-value balance" id="balance">₹0</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- scripts -->
   <script src="js/storage.js"></script>
   <script src="js/shared.js"></script>
   <script>
+    // calculate totals using data from localStorage
     const all = loadEntries();
-    const income = all.filter(x => x.type === "Income").reduce((a,b)=>a+b.amount,0);
-    const expense = all.filter(x => x.type==="Expense").reduce((a,b)=>a+b.amount,0);
+    const income = all
+      .filter(x => x.type === "Income")
+      .reduce((sum, e) => sum + e.amount, 0);
+    const expense = all
+      .filter(x => x.type === "Expense")
+      .reduce((sum, e) => sum + e.amount, 0);
 
-    document.getElementById("total-income").innerText = format(income);
-    document.getElementById("total-expense").innerText = format(expense);
-    document.getElementById("balance").innerText = format(income - expense);
+    document.getElementById("total-income").textContent = format(income);
+    document.getElementById("total-expense").textContent = format(expense);
+    document.getElementById("balance").textContent = format(income - expense);
   </script>
-
 </body>
-
 </html>
