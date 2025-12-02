@@ -1,21 +1,20 @@
 /* css/login.css */
 
-/* ... (Keep your existing body, blobs, and login card styles) ... */
-
+/* --- GLOBAL LAYOUT --- */
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow: hidden; /* Stops scrollbars */
   font-family: 'Inter', system-ui, sans-serif;
-  background: #F8FAFC;
+  background: #F8FAFC; /* Light base color */
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Background Blobs (Keep existing code) */
+/* --- ANIMATED BACKGROUND BLOBS --- */
 .background-container {
   position: absolute;
   top: 0; left: 0;
@@ -24,61 +23,85 @@ body {
   overflow: hidden;
   pointer-events: none; /* Let clicks pass through blobs */
 }
-/* ... (Keep blob styles) ... */
 
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px); /* Creates the soft gradient look */
+  opacity: 0.6;
+  animation: float 10s infinite alternate ease-in-out;
+}
 
-/* --- THE GAME LAYER --- */
+/* Blue Blob */
+.blob-1 {
+  width: 500px; height: 500px;
+  background: #3B82F6;
+  top: -100px; left: -100px;
+  animation-delay: 0s;
+}
+
+/* Teal/Green Blob */
+.blob-2 {
+  width: 400px; height: 400px;
+  background: #10B981;
+  bottom: -50px; right: -50px;
+  animation-delay: -5s;
+}
+
+/* Purple Blob */
+.blob-3 {
+  width: 300px; height: 300px;
+  background: #8B5CF6;
+  bottom: 10%; left: 30%;
+  opacity: 0.4;
+  animation: float-reverse 12s infinite alternate ease-in-out;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 60px) scale(1.1); }
+}
+
+@keyframes float-reverse {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-30px, -40px); }
+}
+
+/* --- GAME LAYER (COINS & PIGGY BANK) --- */
 #game-area {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  z-index: 5; /* Above background, below login card (mostly) */
-  pointer-events: none; /* Allow clicks to pass to login card */
+  z-index: 5; /* Above background, below login card */
+  pointer-events: none; /* Important: lets clicks pass through empty space */
 }
 
-/* --- THE COINS --- */
+/* 3D Coins */
 .coin {
-  width: 42px;
-  height: 42px;
-  background: radial-gradient(circle at 30% 30%, #FCD34D, #F59E0B);
-  border: 2px solid #D97706;
-  border-radius: 50%;
+  width: 60px;
+  height: 60px;
   position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: #92400E;
-  box-shadow: 2px 4px 6px rgba(0,0,0,0.2);
   cursor: grab;
-  pointer-events: auto; /* Enable dragging */
+  pointer-events: auto; /* Enable dragging for coins */
+  z-index: 20;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+  transition: transform 0.2s;
   user-select: none;
-  z-index: 20; /* High enough to be over blobs */
-}
-
-.coin::after {
-  content: '';
-  position: absolute;
-  top: 2px; left: 2px; right: 2px; bottom: 2px;
-  border: 1px dashed #FDE68A;
-  border-radius: 50%;
-  opacity: 0.6;
+  -webkit-user-drag: none;
 }
 
 .coin:active {
   cursor: grabbing;
-  transform: scale(1.1) !important;
+  transform: scale(1.1);
 }
 
-
-/* --- THE JAR --- */
-#jar-container {
+/* 3D Piggy Bank Target */
+#bank-container {
   position: absolute;
   bottom: 20px;
   right: 20px;
   width: 140px;
-  height: 180px;
+  height: auto;
   pointer-events: auto; /* Enable dropping */
   display: flex;
   flex-direction: column;
@@ -86,59 +109,151 @@ body {
   z-index: 10;
 }
 
-.jar-neck {
-  width: 100px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.4);
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  border-radius: 4px;
-  margin-bottom: -2px;
-  z-index: 12;
+#piggy-bank {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 15px rgba(0,0,0,0.2));
+  transition: transform 0.2s;
 }
 
-.glass-jar {
-  width: 100%;
-  flex: 1;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
-  backdrop-filter: blur(4px);
-  border: 3px solid rgba(255, 255, 255, 0.7);
-  border-top: none;
-  border-radius: 0 0 20px 20px;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-  position: relative;
-  overflow: hidden; /* Keep coins inside */
-}
-
-/* Shine on the glass */
-.glass-jar::before {
-  content: '';
-  position: absolute;
-  top: 10px; right: 10px;
-  width: 20px; height: 60px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  transform: rotate(15deg);
-}
-
-.jar-label {
-  margin-top: 8px;
+.bank-label {
+  margin-top: 5px;
   font-size: 0.85rem;
-  font-weight: 600;
-  color: #64748B;
-  background: white;
+  font-weight: 700;
+  color: #475569;
+  background: rgba(255,255,255,0.8);
   padding: 4px 12px;
-  border-radius: 12px;
+  border-radius: 99px;
+  backdrop-filter: blur(4px);
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* --- LOGIN CARD (Keep centered) --- */
-.login-container {
-  /* Ensure it sits above coins if they drift under it */
-  position: relative;
-  z-index: 30; 
-  pointer-events: none; /* Let clicks pass through container area */
+/* Bounce Animation */
+@keyframes bouncePig {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.15) translateY(-10px); }
+  60% { transform: scale(1.15) translateY(-10px); }
+  100% { transform: scale(1) translateY(0); }
 }
+
+.bounce {
+  animation: bouncePig 0.4s ease-out;
+}
+
+/* --- GLASS LOGIN CARD --- */
+.login-container {
+  position: relative;
+  z-index: 30; /* Highest priority */
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* Allow clicks to pass through container padding */
+}
+
 .login-card {
   pointer-events: auto; /* Re-enable clicks on the card itself */
+  
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  
+  width: 100%;
+  max-width: 380px;
+  padding: 48px 32px;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  text-align: center;
+  
+  /* Entry Animation */
+  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
 }
-/* ... (Keep rest of login-card styles) ... */
+
+@keyframes slideUpFade {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- TYPOGRAPHY & UI --- */
+.brand-icon {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  color: white;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+}
+
+.brand-icon svg { width: 30px; height: 30px; }
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #64748B;
+  font-size: 0.95rem;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+/* Google Button */
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  background: white;
+  color: #334155;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.google-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  border-color: #CBD5E1;
+}
+
+.google-btn:active {
+  transform: translateY(0);
+}
+
+/* Divider */
+.divider {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94A3B8;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.divider::before, .divider::after {
+  content: "";
+  height: 1px;
+  width: 20px;
+  background: #E2E8F0;
+  margin: 0 10px;
+}
