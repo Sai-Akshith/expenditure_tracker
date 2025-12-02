@@ -5,9 +5,9 @@
   <title>Add Entry - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="css/style.css?v=12" />
-  <link rel="stylesheet" href="css/navbar.css?v=12" />
-  <link rel="stylesheet" href="css/form.css?v=12" />
+  <link rel="stylesheet" href="css/style.css?v=11" />
+  <link rel="stylesheet" href="css/navbar.css?v=11" />
+  <link rel="stylesheet" href="css/form.css?v=11" />
 </head>
 
 <body>
@@ -70,15 +70,15 @@
       </div>
 
       <div class="animation-container">
-        <div id="character-scene" class="scene-wrapper">
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="Man Working" class="char-male" />
+        <div id="character" class="character float-animation">
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Technologist.png" alt="Watching" class="char-state char-watching" />
           
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Woman%20Gesturing%20No.png" alt="Woman Stopping" class="char-female" />
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Man%20Facepalming.png" alt="Eyes Covered" class="char-state char-typing" />
         </div>
         
         <p class="animation-text">
-          He's crunching the numbers...<br>
-          <span style="font-size:0.85rem; opacity:0.7;">(but she stops him from peeking at your coffee dates!)</span>
+          I'm crunching the numbers...<br>
+          <span style="font-size:0.85rem; opacity:0.7;">(and pretending I didn't see that expense of coffee date!)</span>
         </p>
       </div>
 
@@ -96,22 +96,21 @@
     console.log("add.js logic injected");
     const form = document.getElementById("entry-form");
     const dateInput = document.getElementById("date");
-    const scene = document.getElementById("character-scene"); // Changed ID
+    const character = document.getElementById("character");
     const formInputs = form.querySelectorAll("input, select");
     let typingTimer;
 
     // --- ANIMATION LOGIC ---
     function startTyping() {
-      // Add class to parent container to trigger CSS animations
-      scene.classList.add("typing-mode");
+      character.classList.add("typing-mode");
       clearTimeout(typingTimer);
     }
 
     function stopTyping() {
       clearTimeout(typingTimer);
       typingTimer = setTimeout(() => {
-        scene.classList.remove("typing-mode");
-      }, 600); // Wait a bit before she leaves
+        character.classList.remove("typing-mode");
+      }, 500); // Wait 0.5s before looking back
     }
 
     formInputs.forEach(input => {
@@ -132,7 +131,7 @@
         return;
       }
 
-      stopTyping(); 
+      stopTyping(); // Look back at the user
 
       const entry = {
         uid: window.currentUser.uid,
