@@ -1,3 +1,4 @@
+/* buttons in Actions column */
 .edit-btn, .delete-btn {
   padding: 4px 10px;
   border-radius: 6px;
@@ -26,4 +27,96 @@
 .delete-btn:hover {
   background: #ef4444;
   transform: translateY(-2px);
+}
+
+/* Modal */
+
+.modal.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.modal-content {
+  position: relative;
+  background: #020617;
+  border-radius: 16px;
+  padding: 20px 22px;
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid #1f2937;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  z-index: 60;
+  animation: scaleIn 0.18s ease-out;
+}
+
+.modal-content h2 {
+  margin-bottom: 12px;
+}
+
+.modal-content form label {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.modal-content form input,
+.modal-content form select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.modal-actions button {
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+#edit-cancel {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+#edit-save {
+  background: #22c55e;
+  color: #0b1120;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
