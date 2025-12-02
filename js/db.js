@@ -9,8 +9,6 @@ if (!firebase.auth) {
   console.error("❌ Firebase Auth not loaded. Include firebase-auth-compat.js");
 }
 
-const db = firebase.firestore();
-
 /**
  * Add a new entry for the logged-in user
  */
