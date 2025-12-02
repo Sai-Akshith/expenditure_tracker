@@ -1,17 +1,16 @@
 /* css/form.css */
 
-/* New layout container */
+/* ... (Keep your layout styles) ... */
 .form-page-layout {
   display: flex;
   gap: 40px;
-  align-items: flex-start; /* Align to top */
+  align-items: flex-start; 
   margin-top: 24px;
 }
 
-/* The form itself */
 .form-container {
-  flex: 1; /* Takes available space */
-  max-width: 500px; /* But not too wide */
+  flex: 1; 
+  max-width: 500px; 
 }
 
 form {
@@ -22,7 +21,7 @@ form {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* ... (Keep your existing label/input/button styles here) ... */
+/* ... (Keep inputs/buttons styles) ... */
 form label { display: block; margin-bottom: 6px; font-size: 0.875rem; font-weight: 500; color: #374151; }
 form input, form select { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #111827; font-size: 0.95rem; margin-bottom: 16px; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
 form input:focus, form select:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
@@ -31,7 +30,8 @@ form button:hover { background: #1D4ED8; }
 form button:active { background: #1E40AF; }
 
 
-/* --- CHARACTER ANIMATION STYLES --- */
+/* --- NEW DUAL CHARACTER ANIMATION --- */
+
 .animation-container {
   flex: 1;
   display: flex;
@@ -39,62 +39,68 @@ form button:active { background: #1E40AF; }
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  /* Only show on larger screens where there is space */
-  display: none; 
+  display: none; /* Mobile hidden */
 }
 
-/* Show animation on screens wider than 900px */
 @media (min-width: 900px) {
-  .animation-container {
-    display: flex;
-  }
+  .animation-container { display: flex; }
 }
 
-.character {
-  width: 250px;
-  height: 250px;
+.scene-wrapper {
   position: relative;
+  width: 280px;
+  height: 280px;
   margin-bottom: 20px;
 }
 
-/* Character Images */
-.char-state {
+/* 1. THE MAN (Base Layer) */
+.char-male {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 20px; /* Centered slightly */
+  width: 240px; height: 240px;
   object-fit: contain;
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  z-index: 1;
+  transition: all 0.4s ease;
+  /* Floating idle animation */
+  animation: floatMale 4s ease-in-out infinite;
 }
 
-/* Default State: Watching */
-.char-watching {
-  opacity: 1;
-  transform: scale(1);
-}
-.char-typing {
-  opacity: 0;
-  transform: scale(0.95);
-}
-
-/* Typing Mode State: Eyes Covered */
-.character.typing-mode .char-watching {
-  opacity: 0;
-  transform: scale(0.95);
-}
-.character.typing-mode .char-typing {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Floating Animation */
-@keyframes floatChar {
+@keyframes floatMale {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+  50% { transform: translateY(-10px); }
 }
 
-.float-animation {
-  animation: floatChar 4s ease-in-out infinite;
+
+/* 2. THE WOMAN (Action Layer) */
+.char-female {
+  position: absolute;
+  top: 10px;
+  right: -80px; /* Start hidden off to the right */
+  width: 240px; height: 240px;
+  object-fit: contain;
+  z-index: 5; /* She is ON TOP */
+  opacity: 0;
+  transform: scale(0.8) rotate(10deg); /* Start smaller and tilted */
+  
+  /* The Magic Transition: Bouncy effect */
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+
+/* --- INTERACTION STATES --- */
+
+/* When Typing: Man fades slightly and moves back */
+.scene-wrapper.typing-mode .char-male {
+  opacity: 0.6;
+  filter: blur(2px); /* Focus shifts to her */
+  transform: scale(0.95) translateX(-20px); /* He recoils slightly */
+}
+
+/* When Typing: Woman slides in */
+.scene-wrapper.typing-mode .char-female {
+  opacity: 1;
+  right: 20px; /* Slides into frame */
+  transform: scale(1.1) rotate(0deg); /* Grows and straightens up */
 }
 
 .animation-text {
@@ -103,4 +109,10 @@ form button:active { background: #1E40AF; }
   font-size: 1rem;
   line-height: 1.5;
   font-weight: 500;
+  transition: color 0.3s;
+}
+
+/* Change text color slightly when active */
+.scene-wrapper.typing-mode + .animation-text {
+  color: #DC2626; /* Warning red tone */
 }
