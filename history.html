@@ -21,17 +21,17 @@
 
     <table>
       <thead>
-    <tr>
-      <th>Date</th>
-      <th>Type</th>
-      <th>Category</th>
-      <th>Amount</th>
-      <th>Method</th>
-      <th>Description</th>
-      <th>Actions</th>  <!-- NEW -->
-    </tr>
-  </thead>
-  <tbody id="history-body"></tbody>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Method</th>
+          <th>Description</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="history-body"></tbody>
     </table>
 
     <p id="empty-msg" style="margin-top:12px;font-size:0.85rem;color:#9ca3af;">
@@ -39,9 +39,47 @@
     </p>
   </main>
 
-  <script src="js/storage.js"></script>
-  <script src="js/shared.js"></script>
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h2>Edit Entry</h2>
+
+      <form id="edit-form">
+        <label>Date</label>
+        <input type="date" id="edit-date" required />
+
+        <label>Type</label>
+        <select id="edit-type">
+          <option value="Expense">Expense</option>
+          <option value="Income">Income</option>
+        </select>
+
+        <label>Category</label>
+        <input type="text" id="edit-category" required />
+
+        <label>Amount (₹)</label>
+        <input type="number" id="edit-amount" min="0" step="0.01" required />
+
+        <label>Method</label>
+        <input type="text" id="edit-method" />
+
+        <label>Description</label>
+        <input type="text" id="edit-description" />
+
+        <div class="modal-actions">
+          <button type="button" id="edit-cancel">Cancel</button>
+          <button type="submit" id="edit-save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-init.js"></script>
+  <script src="js/db.js"></script>
   <script src="js/history.js"></script>
 </body>
 </html>
-
