@@ -1,4 +1,5 @@
 // js/add.js
+
 const form = document.getElementById("entry-form");
 const dateInput = document.getElementById("date");
 const typeInput = document.getElementById("type");
@@ -12,7 +13,7 @@ if (!dateInput.value) {
   dateInput.valueAsDate = new Date();
 }
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const date = dateInput.value;
@@ -27,25 +28,24 @@ form.addEventListener("submit", (e) => {
     return;
   }
 
-  const entries = loadEntries();
+  try {
+    await addEntry({
+      date,
+      type,
+      category,
+      amount,
+      method,
+      description
+    });
 
-  entries.push({
-    id: Date.now(),
-    date,
-    type,
-    category,
-    amount,
-    method,
-    description,
-    createdAt: Date.now()
-  });
+    alert("Entry saved ✅");
 
-  saveEntries(entries);
-
-  alert("Entry saved");
-
-  // reset form (keep date same)
-  amountInput.value = "";
-  methodInput.value = "";
-  descriptionInput.value = "";
+    // reset fields (keep date)
+    amountInput.value = "";
+    methodInput.value = "";
+    descriptionInput.value = "";
+  } catch (err) {
+    console.error(err);
+    alert("Failed to save entry. Check console.");
+  }
 });
