@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Entry - Spending Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/form.css">
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="add.html">Add Entry</a>
+    <a href="history.html">History</a>
+  </nav>
+
+  <h1>Add New Entry</h1>
+
+  <form id="entry-form">
+    <label>Date</label>
+    <input type="date" id="date" required>
+
+    <label>Type</label>
+    <select id="type">
+      <option>Expense</option>
+      <option>Income</option>
+    </select>
+
+    <label>Category</label>
+    <select id="category">
+      <option>Food & Groceries</option>
+      <option>Transportation</option>
+      <option>Bills</option>
+      <option>Shopping</option>
+      <option>Other</option>
+    </select>
+
+    <label>Amount</label>
+    <input type="number" id="amount" required>
+
+    <label>Description</label>
+    <input type="text" id="description">
+
+    <button type="submit">Add Entry</button>
+  </form>
+
+  <script src="js/storage.js"></script>
+  <script src="js/add.js"></script>
+
+</body>
+</html>

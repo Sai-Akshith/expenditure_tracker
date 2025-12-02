@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - Spending Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="index.html">Home</a>
+    <a href="add.html">Add Entry</a>
+    <a href="history.html">History</a>
+  </nav>
+
+  <h1>Dashboard</h1>
+  <p>Total Income: <span id="total-income">₹0</span></p>
+  <p>Total Expense: <span id="total-expense">₹0</span></p>
+  <p>Balance: <span id="balance">₹0</span></p>
+
+  <script src="js/storage.js"></script>
+  <script src="js/shared.js"></script>
+  <script>
+    const all = loadEntries();
+    const income = all.filter(x => x.type === "Income").reduce((a,b)=>a+b.amount,0);
+    const expense = all.filter(x => x.type==="Expense").reduce((a,b)=>a+b.amount,0);
+
+    document.getElementById("total-income").innerText = format(income);
+    document.getElementById("total-expense").innerText = format(expense);
+    document.getElementById("balance").innerText = format(income - expense);
+  </script>
+
+</body>
+</html>
