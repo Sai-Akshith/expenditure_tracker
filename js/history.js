@@ -17,16 +17,17 @@ const editCancel = document.getElementById("edit-cancel");
 let currentEntries = [];
 let editingId = null;
 
-// render table rows
+// Render entries on screen
 function render(entries) {
   currentEntries = entries;
   bodyEl.innerHTML = "";
 
   if (!entries.length) {
     emptyMsg.style.display = "block";
-  } else {
-    emptyMsg.style.display = "none";
+    return;
   }
+
+  emptyMsg.style.display = "none";
 
   entries.forEach((e) => {
     const tr = document.createElement("tr");
@@ -48,26 +49,23 @@ function render(entries) {
   });
 }
 
-// subscribe to Firestore
+// Subscribe to Firestore (realtime sync)
 subscribeToEntries((entries) => {
-  // newest first
   entries.sort((a, b) => {
     if (a.date === b.date) return (b.createdAt || 0) - (a.createdAt || 0);
     return b.date.localeCompare(a.date);
   });
-
   render(entries);
 });
 
-// delegate clicks for Edit + Delete
+// Click actions for edit/delete
 bodyEl.addEventListener("click", async (e) => {
   const id = e.target.getAttribute("data-id");
   if (!id) return;
 
   if (e.target.classList.contains("delete-btn")) {
     const ok = confirm("Delete this entry?");
-    if (!ok) return;
-    await deleteEntry(id);
+    if (ok) await deleteEntry(id);
     return;
   }
 
@@ -76,6 +74,7 @@ bodyEl.addEventListener("click", async (e) => {
   }
 });
 
+// Open modal with data
 function openEditModal(id) {
   const item = currentEntries.find(e => e.id === id);
   if (!item) return;
@@ -92,24 +91,22 @@ function openEditModal(id) {
   modal.classList.remove("hidden");
 }
 
+// Close modal
 function closeEditModal() {
   modal.classList.add("hidden");
   editingId = null;
 }
 
-// cancel close
-editCancel.addEventListener("click", () => {
-  closeEditModal();
-});
+editCancel.addEventListener("click", closeEditModal);
 
-// backdrop click closes modal
+// Close when clicking backdrop
 modal.addEventListener("click", (e) => {
   if (e.target === modal || e.target.classList.contains("modal-backdrop")) {
     closeEditModal();
   }
 });
 
-// handle save
+// Save edited entry
 editForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!editingId) return;
@@ -124,7 +121,7 @@ editForm.addEventListener("submit", async (e) => {
   };
 
   if (!updated.date || isNaN(updated.amount) || updated.amount <= 0) {
-    alert("Please provide a valid date and amount.");
+    alert("Please enter valid date/amount.");
     return;
   }
 
