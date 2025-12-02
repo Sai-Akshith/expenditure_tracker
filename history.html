@@ -5,23 +5,24 @@
   <title>History - Spending Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" href="css/style.css?v=3" />
-  <link rel="stylesheet" href="css/navbar.css?v=3" />
-  <link rel="stylesheet" href="css/table.css?v=3" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
+  <link rel="stylesheet" href="css/navbar.css?v=5" />
+  <link rel="stylesheet" href="css/table.css?v=5" />
 </head>
 
 <body>
   <nav class="navbar">
-    <a href="index.html">Home</a>
-    <a href="add.html">Add Entry</a>
-    <a href="history.html" class="active">History</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="add.html">Add Entry</a>
+      <a href="history.html" class="active">History</a>
+    </div>
+    
+    <div class="nav-profile">
+      <span id="nav-user-email"></span>
+      <button id="nav-logout-btn">Logout</button>
+    </div>
   </nav>
-
-  <div style="text-align: right; padding: 10px 24px;">
-    <button id="login-btn">Login with Google</button>
-    <button id="logout-btn" style="display:none;">Logout</button>
-    <p id="user-info" style="color:#6B7280; font-size:0.85rem; margin-top:4px;"></p>
-  </div>
 
   <main class="page">
     <h1>Transaction History</h1>
@@ -82,5 +83,3 @@
 
 </body>
 </html>
-
-
