@@ -1,130 +1,100 @@
 // js/history.js
+console.log("history.js loaded");
 
-const bodyEl = document.getElementById("history-body");
+const tbody = document.getElementById("history-body");
 const emptyMsg = document.getElementById("empty-msg");
 
-// modal elements
-const modal = document.getElementById("edit-modal");
-const editForm = document.getElementById("edit-form");
-const editDate = document.getElementById("edit-date");
-const editType = document.getElementById("edit-type");
-const editCategory = document.getElementById("edit-category");
-const editAmount = document.getElementById("edit-amount");
-const editMethod = document.getElementById("edit-method");
-const editDescription = document.getElementById("edit-description");
-const editCancel = document.getElementById("edit-cancel");
+// Ensure buttons exist
+const loginBtn = document.getElementById("login-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const userInfo = document.getElementById("user-info");
 
-let currentEntries = [];
-let editingId = null;
+// Wait for login state
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) {
+    console.log("User not logged in → cannot load history");
 
-// Render entries on screen
-function render(entries) {
-  currentEntries = entries;
-  bodyEl.innerHTML = "";
+    tbody.innerHTML = "";
+    emptyMsg.textContent = "Please log in to view your history.";
 
-  if (!entries.length) {
-    emptyMsg.style.display = "block";
+    loginBtn.style.display = "block";
+    logoutBtn.style.display = "none";
+    userInfo.textContent = "";
     return;
   }
 
-  emptyMsg.style.display = "none";
+  // UI for logged-in user
+  loginBtn.style.display = "none";
+  logoutBtn.style.display = "block";
+  userInfo.textContent = "Logged in as: " + user.email;
 
-  entries.forEach((e) => {
-    const tr = document.createElement("tr");
+  console.log("User logged in → loading entries");
 
-    tr.innerHTML = `
-      <td>${e.date}</td>
-      <td>${e.type}</td>
-      <td>${e.category}</td>
-      <td>${format(e.amount)}</td>
-      <td>${e.method || "-"}</td>
-      <td>${e.description || "-"}</td>
-      <td>
-        <button class="edit-btn" data-id="${e.id}">Edit</button>
-        <button class="delete-btn" data-id="${e.id}">Delete</button>
-      </td>
-    `;
+  // Subscribe to only this user’s entries
+  subscribeToEntries((entries) => {
+    const userEntries = entries.filter((e) => e.uid === user.uid);
 
-    bodyEl.appendChild(tr);
+    if (userEntries.length === 0) {
+      tbody.innerHTML = "";
+      emptyMsg.textContent = "No entries found.";
+      return;
+    }
+
+    emptyMsg.textContent = "";
+    tbody.innerHTML = "";
+
+    // Render each entry
+    userEntries.forEach((entry) => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${entry.date}</td>
+        <td>${entry.type}</td>
+        <td>${entry.category}</td>
+        <td>₹${entry.amount.toFixed(2)}</td>
+        <td>${entry.method || "-"}</td>
+        <td>${entry.description || "-"}</td>
+        <td>
+          <button class="edit-btn" data-id="${entry.id}">Edit</button>
+          <button class="delete-btn" data-id="${entry.id}">Delete</button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    // DELETE functionality
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.onclick = async () => {
+        if (confirm("Are you sure you want to delete this entry?")) {
+          const id = btn.dataset.id;
+          try {
+            await deleteEntry(id);
+            console.log("Deleted:", id);
+          } catch (err) {
+            console.error("❌ Delete error:", err);
+            alert("Failed to delete. Check console.");
+          }
+        }
+      };
+    });
+
+    // EDIT functionality (simple version)
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+      btn.onclick = async () => {
+        const id = btn.dataset.id;
+        const newAmount = prompt("Enter new amount:");
+
+        if (newAmount && !isNaN(parseFloat(newAmount))) {
+          try {
+            await updateEntry(id, { amount: parseFloat(newAmount) });
+            console.log("Updated:", id);
+          } catch (err) {
+            console.error("❌ Update error:", err);
+            alert("Failed to update. Check console.");
+          }
+        }
+      };
+    });
   });
-}
-
-// Subscribe to Firestore (realtime sync)
-subscribeToEntries((entries) => {
-  entries.sort((a, b) => {
-    if (a.date === b.date) return (b.createdAt || 0) - (a.createdAt || 0);
-    return b.date.localeCompare(a.date);
-  });
-  render(entries);
-});
-
-// Click actions for edit/delete
-bodyEl.addEventListener("click", async (e) => {
-  const id = e.target.getAttribute("data-id");
-  if (!id) return;
-
-  if (e.target.classList.contains("delete-btn")) {
-    const ok = confirm("Delete this entry?");
-    if (ok) await deleteEntry(id);
-    return;
-  }
-
-  if (e.target.classList.contains("edit-btn")) {
-    openEditModal(id);
-  }
-});
-
-// Open modal with data
-function openEditModal(id) {
-  const item = currentEntries.find(e => e.id === id);
-  if (!item) return;
-
-  editingId = id;
-
-  editDate.value = item.date;
-  editType.value = item.type;
-  editCategory.value = item.category;
-  editAmount.value = item.amount;
-  editMethod.value = item.method || "";
-  editDescription.value = item.description || "";
-
-  modal.classList.remove("hidden");
-}
-
-// Close modal
-function closeEditModal() {
-  modal.classList.add("hidden");
-  editingId = null;
-}
-
-editCancel.addEventListener("click", closeEditModal);
-
-// Close when clicking backdrop
-modal.addEventListener("click", (e) => {
-  if (e.target === modal || e.target.classList.contains("modal-backdrop")) {
-    closeEditModal();
-  }
-});
-
-// Save edited entry
-editForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  if (!editingId) return;
-
-  const updated = {
-    date: editDate.value,
-    type: editType.value,
-    category: editCategory.value,
-    amount: parseFloat(editAmount.value),
-    method: editMethod.value.trim(),
-    description: editDescription.value.trim()
-  };
-
-  if (!updated.date || isNaN(updated.amount) || updated.amount <= 0) {
-    alert("Please enter valid date/amount.");
-    return;
-  }
-
-  await updateEntry(editingId, updated);
-  closeEditModal();
 });
