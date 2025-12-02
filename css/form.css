@@ -21,7 +21,6 @@ form {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* ... (Keep inputs/buttons styles) ... */
 form label { display: block; margin-bottom: 6px; font-size: 0.875rem; font-weight: 500; color: #374151; }
 form input, form select { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid #D1D5DB; background: #FFFFFF; color: #111827; font-size: 0.95rem; margin-bottom: 16px; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
 form input:focus, form select:focus { outline: none; border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
@@ -30,7 +29,7 @@ form button:hover { background: #1D4ED8; }
 form button:active { background: #1E40AF; }
 
 
-/* --- NEW DUAL CHARACTER ANIMATION --- */
+/* --- DUAL CHARACTER ANIMATION --- */
 
 .animation-container {
   flex: 1;
@@ -39,7 +38,7 @@ form button:active { background: #1E40AF; }
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  display: none; /* Mobile hidden */
+  display: none; 
 }
 
 @media (min-width: 900px) {
@@ -56,12 +55,11 @@ form button:active { background: #1E40AF; }
 /* 1. THE MAN (Base Layer) */
 .char-male {
   position: absolute;
-  top: 0; left: 20px; /* Centered slightly */
+  top: 0; left: 20px;
   width: 240px; height: 240px;
   object-fit: contain;
   z-index: 1;
   transition: all 0.4s ease;
-  /* Floating idle animation */
   animation: floatMale 4s ease-in-out infinite;
 }
 
@@ -70,37 +68,32 @@ form button:active { background: #1E40AF; }
   50% { transform: translateY(-10px); }
 }
 
-
 /* 2. THE WOMAN (Action Layer) */
 .char-female {
   position: absolute;
-  top: 10px;
-  right: -80px; /* Start hidden off to the right */
+  top: 0;
+  right: -100px; /* Start hidden further right */
   width: 240px; height: 240px;
   object-fit: contain;
-  z-index: 5; /* She is ON TOP */
+  z-index: 5;
   opacity: 0;
-  transform: scale(0.8) rotate(10deg); /* Start smaller and tilted */
-  
-  /* The Magic Transition: Bouncy effect */
+  transform: scale(0.8) rotate(15deg);
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-
 /* --- INTERACTION STATES --- */
 
-/* When Typing: Man fades slightly and moves back */
+/* When Typing: Man looks surprised/moves back */
 .scene-wrapper.typing-mode .char-male {
-  opacity: 0.6;
-  filter: blur(2px); /* Focus shifts to her */
-  transform: scale(0.95) translateX(-20px); /* He recoils slightly */
+  opacity: 0.7;
+  transform: scale(0.9) translateX(-30px); /* He backs away */
 }
 
-/* When Typing: Woman slides in */
+/* When Typing: Woman slides in to "Slap/Stop" */
 .scene-wrapper.typing-mode .char-female {
   opacity: 1;
-  right: 20px; /* Slides into frame */
-  transform: scale(1.1) rotate(0deg); /* Grows and straightens up */
+  right: 10px; /* Slides in close to him */
+  transform: scale(1.1) rotate(0deg);
 }
 
 .animation-text {
@@ -112,7 +105,6 @@ form button:active { background: #1E40AF; }
   transition: color 0.3s;
 }
 
-/* Change text color slightly when active */
 .scene-wrapper.typing-mode + .animation-text {
-  color: #DC2626; /* Warning red tone */
+  color: #DC2626; /* Text turns red */
 }
