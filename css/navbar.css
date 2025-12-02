@@ -1,28 +1,62 @@
+/* css/navbar.css */
 .navbar {
   background: #FFFFFF;
-  padding: 16px 24px;
+  padding: 12px 24px;
   display: flex;
-  gap: 32px;
+  align-items: center;
+  justify-content: space-between; /* Pushes content to edges */
   border-bottom: 1px solid #E5E7EB;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
-  align-items: center;
 }
 
-/* base link */
+.nav-links {
+  display: flex;
+  gap: 32px;
+}
+
 .navbar a {
   position: relative;
-  color: #4B5563; /* Medium grey */
+  color: #4B5563;
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
-/* Active/Hover state */
-.navbar a:hover {
-  color: #2563EB; /* Brand Blue */
+.navbar a:hover, .navbar a.active {
+  color: #2563EB;
 }
 
-.navbar a.active {
-  color: #2563EB;
+/* User Profile Section in Navbar */
+.nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#nav-user-email {
+  font-size: 0.85rem;
+  color: #6B7280;
+  display: none; /* Hidden on mobile usually */
+}
+
+@media (min-width: 600px) {
+  #nav-user-email { display: block; }
+}
+
+#nav-logout-btn {
+  background: white;
+  border: 1px solid #E5E7EB;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #DC2626; /* Red text for logout */
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+#nav-logout-btn:hover {
+  background: #FEF2F2;
+  border-color: #FECACA;
 }
