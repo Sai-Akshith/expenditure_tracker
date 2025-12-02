@@ -1,180 +1,144 @@
 /* css/login.css */
 
+/* ... (Keep your existing body, blobs, and login card styles) ... */
+
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
   width: 100vw;
-  overflow: hidden; /* Stops scrollbars from moving shapes */
+  overflow: hidden;
   font-family: 'Inter', system-ui, sans-serif;
-  background: #F8FAFC; /* Light base */
+  background: #F8FAFC;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* --- ANIMATED BACKGROUND BLOBS --- */
+/* Background Blobs (Keep existing code) */
 .background-container {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
   z-index: 0;
   overflow: hidden;
+  pointer-events: none; /* Let clicks pass through blobs */
 }
+/* ... (Keep blob styles) ... */
 
-.blob {
+
+/* --- THE GAME LAYER --- */
+#game-area {
   position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 5; /* Above background, below login card (mostly) */
+  pointer-events: none; /* Allow clicks to pass to login card */
+}
+
+/* --- THE COINS --- */
+.coin {
+  width: 42px;
+  height: 42px;
+  background: radial-gradient(circle at 30% 30%, #FCD34D, #F59E0B);
+  border: 2px solid #D97706;
   border-radius: 50%;
-  filter: blur(80px); /* This creates the soft gradient look */
-  opacity: 0.6;
-  animation: float 10s infinite alternate ease-in-out;
-}
-
-/* Blue Blob */
-.blob-1 {
-  width: 500px; height: 500px;
-  background: #3B82F6;
-  top: -100px; left: -100px;
-  animation-delay: 0s;
-}
-
-/* Teal/Green Blob */
-.blob-2 {
-  width: 400px; height: 400px;
-  background: #10B981;
-  bottom: -50px; right: -50px;
-  animation-delay: -5s;
-}
-
-/* Purple Blob */
-.blob-3 {
-  width: 300px; height: 300px;
-  background: #8B5CF6;
-  bottom: 10%; left: 30%;
-  opacity: 0.4;
-  animation: float-reverse 12s infinite alternate ease-in-out;
-}
-
-@keyframes float {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(40px, 60px) scale(1.1); }
-}
-
-@keyframes float-reverse {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-30px, -40px); }
-}
-
-/* --- GLASS LOGIN CARD --- */
-.login-container {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.login-card {
-  /* Glassmorphism Effect */
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  
-  width: 100%;
-  max-width: 380px;
-  padding: 48px 32px;
-  border-radius: 24px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  text-align: center;
-  
-  /* Entry Animation */
-  animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-@keyframes slideUpFade {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- TYPOGRAPHY & UI --- */
-.brand-icon {
-  width: 56px; height: 56px;
-  background: linear-gradient(135deg, #2563EB, #1D4ED8);
-  color: white;
-  border-radius: 16px;
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 24px;
-  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
-}
-
-.brand-icon svg { width: 30px; height: 30px; }
-
-h1 {
-  font-size: 1.75rem;
   font-weight: 700;
-  color: #1E293B;
-  margin-bottom: 8px;
+  font-size: 1.2rem;
+  color: #92400E;
+  box-shadow: 2px 4px 6px rgba(0,0,0,0.2);
+  cursor: grab;
+  pointer-events: auto; /* Enable dragging */
+  user-select: none;
+  z-index: 20; /* High enough to be over blobs */
 }
 
-.subtitle {
-  color: #64748B;
-  font-size: 0.95rem;
-  margin-bottom: 40px;
-  line-height: 1.5;
+.coin::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px; right: 2px; bottom: 2px;
+  border: 1px dashed #FDE68A;
+  border-radius: 50%;
+  opacity: 0.6;
 }
 
-/* Google Button */
-.google-btn {
+.coin:active {
+  cursor: grabbing;
+  transform: scale(1.1) !important;
+}
+
+
+/* --- THE JAR --- */
+#jar-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 140px;
+  height: 180px;
+  pointer-events: auto; /* Enable dropping */
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  z-index: 10;
+}
+
+.jar-neck {
+  width: 100px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  margin-bottom: -2px;
+  z-index: 12;
+}
+
+.glass-jar {
   width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #E2E8F0;
-  background: white;
-  color: #334155;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+  backdrop-filter: blur(4px);
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  border-top: none;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Keep coins inside */
 }
 
-.google-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-  border-color: #CBD5E1;
+/* Shine on the glass */
+.glass-jar::before {
+  content: '';
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 20px; height: 60px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  transform: rotate(15deg);
 }
 
-.google-btn:active {
-  transform: translateY(0);
-}
-
-/* Divider / Footer */
-.divider {
-  margin-top: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94A3B8;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.jar-label {
+  margin-top: 8px;
+  font-size: 0.85rem;
   font-weight: 600;
+  color: #64748B;
+  background: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.divider::before, .divider::after {
-  content: "";
-  height: 1px;
-  width: 20px;
-  background: #E2E8F0;
-  margin: 0 10px;
+/* --- LOGIN CARD (Keep centered) --- */
+.login-container {
+  /* Ensure it sits above coins if they drift under it */
+  position: relative;
+  z-index: 30; 
+  pointer-events: none; /* Let clicks pass through container area */
 }
+.login-card {
+  pointer-events: auto; /* Re-enable clicks on the card itself */
+}
+/* ... (Keep rest of login-card styles) ... */
